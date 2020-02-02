@@ -1,0 +1,393 @@
+---
+title: "Theorem Limit Central"
+author: "Luciano Lorenti"
+date: "1/17/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+1. Bottles filled by a certain machine are supposed to contain 12 oz of liquid. In fact the fill volume is random with mean 12.01 oz and standard deviation 0.2 oz. 
+
+a. What is the probability that the mean volume of a random sample of 144 bottles is less than 12 oz?
+```{r}
+u = 12
+x = 12.01
+s = 0.2
+n= 144
+z = (x - u)/(s/sqrt(n))
+print(z)
+print(paste("The probability is ", pnorm(-z)))
+
+```
+b. If the population mean fill volume is increased to 12.03 oz, what is the probability that the mean volume of a sample of size 144 will be less than 12 oz?
+```{r}
+u = 12
+x = 12.03
+s = 0.2
+n= 144
+z = (x - u)/(s/sqrt(n))
+print(z)
+print(paste("The probability is ", pnorm(-z)))
+```
+
+2. A 500-page book contains 250 sheets of paper. The thickness of the paper used to manufacture the book has mean 0.08 mm and standard deviation 0.01 mm.
+a. What is the probability that a randomly chosen book is more than 20.2 mm thick (not including the covers)?
+```{r}
+u = 250*0.08
+x = 20.2
+s = 0.01
+n = 250
+
+z = (x - u)/(s*sqrt(n))
+
+print(paste("The probability is ", pnorm(z, lower.tail=FALSE)))
+```
+b. What is the 10th percentile of book thicknesses?
+$$P(z < S_1) = 0.1 $$
+We have the unknown distribution  of the thicknes of the page with mean $\mu=0.08$ and $\sigma=0.01$, and 250 random variables of that distribution:
+The sum $S_n = X_1 + X_2 + ... + X_n$
+Then  $\lim\limits_{n \rightarrow \infty} P\left( \dfrac{S_n - nu}{\sigma\sqrt{n}} \leq z \right) = \Phi(z)$
+
+So $z= \dfrac{S_n - nu}{\sigma\sqrt{n}} $ follows a normal distribution. We want to know for  wich value of that random variable:
+$$
+\begin{align*}
+P(z < S_1) &= 0.1  \\
+S_1 &= \Phi^{-1}(0.1)  \\
+\end{align*}
+$$
+
+```{r}
+S1 = qnorm(0.1)
+print(S1)
+```
+So
+$$
+\begin{align*}
+\lim\limits_{n \rightarrow \infty} P\left( \dfrac{S_n - n\mu}{\sigma\sqrt{n}} \leq -1.281552 \right) = \Phi(-1.281552) &= 0.1 \\
+\lim\limits_{n \rightarrow \infty} P\left( S_n - n\mu \leq -1.281552 \sigma \sqrt{n} \right) &= 0.1 \\
+\lim\limits_{n \rightarrow \infty} P\left( S_n - n\mu \leq -1.281552 \sigma \sqrt{n} + n \mu \right) &= 0.1 \\
+\end{align*}
+$$
+
+```{r}
+S1 = qnorm(0.1)
+u = 0.08
+s = 0.01
+n = 250
+print(n*u + sqrt(n)*s*S1)
+```
+
+c. Someone wants to know the probability that a randomly chosen page is more than 0.1 mm thick. Is enough information given to compute this probability? If so, compute the probability. If not, explain why not
+
+No
+
+
+3. A commuter encounters four traffic lights each day onher way to work. Let $X$ represent the number of these that are red lights. The probability mass function of $X$ is as follows. 
+
+$$ P(X=0) = 0.1  \hspace{5pt} | \hspace{5pt}
+P(X=1) = 0.3   \hspace{5pt} | \hspace{5pt}
+P(X=2) = 0.3   \hspace{5pt} |\hspace{5pt}
+P(X=3) = 0.2  \hspace{5pt} | \hspace{5pt} 
+P(X=4) = 0.1  \hspace{5pt} 
+$$
+
+What is the probability that in a period of 100 days,the average number of red lights encountered is morethan 2 per day?
+
+Let first compute the mean and the variance of the distribution of the number of traffic lights.
+
+$$
+\begin{align*}
+\mu &= \sum\limits_{i=0}^4 i P(X=i)  \\
+ &= 1*0.3 + 2*0.3 + 3*0.2 + 4*0.1
+\end{align*}
+$$
+```{r}
+mu = 1*0.3 + 2*0.3 + 3*0.2 + 4*0.1
+print(mu)
+```
+
+Let's compute the variance $Var[X] = E[X^2]  - E[X]^2$
+
+$$
+\begin{align*}
+E[X^2] &= \sum\limits_{i=0}^4 i^2 P(X=i) \\
+&= 1*0.3 + 4*0.3 + 9*0.2 + 16*0.1\\
+\end{align*}
+$$
+
+```{r}
+mu = 1*0.3 + 2*0.3 + 3*0.2 + 4*0.1
+muu =  1*0.3 + 4*0.3 + 9*0.2 + 16*0.1
+var = muu - mu^2
+print(var)
+```
+
+
+
+```{r}
+n = 100
+mu = 1*0.3 + 2*0.3 + 3*0.2 + 4*0.1
+muu =  1*0.3 + 4*0.3 + 9*0.2 + 16*0.1
+var = muu - mu^2
+print(pnorm(2, mean=mu, sd=sqrt(var/n),lower.tail=FALSE))
+```
+
+Other way
+$$
+\begin{align*}
+P\left(\hat{X} > 2 \right) &= P \left( Z > \dfrac{\hat{X} - \mu}{\sigma/\sqrt{n}} \right) \\
+                     &= P \left( Z > \dfrac{2 - \mu}{\sigma/\sqrt{n}} \right) \\
+\end{align*}
+$$
+
+```{r}
+X = 2
+mu = 1*0.3 + 2*0.3 + 3*0.2 + 4*0.1
+muu =  1*0.3 + 4*0.3 + 9*0.2 + 16*0.1
+var = muu - mu^2
+z = (X-mu)/(sqrt(var/n))
+print(pnorm(z,lower.tail=FALSE))
+```
+
+4. Among all the income-tax forms filed in a certain year,the mean tax paid was \$2000 and the standard devia-tion was \$500. In addition, for 10% of the forms, the tax paid was greater than \$3000. A random sample of 625 tax forms is drawn.
+
+a. What is the probability that the average tax paidon the sample forms is greater than \$1980?
+Every payment is a random varialbe, so $\hat{X} = \dfrac{X_1 + X_2 + ... + X_{625}}{n}$ follows approximately a normal distribution with $\mu_\hat{X} = \mu$ and variance $ \sigma^2_{\hat{X}} = \dfrac{\sigma^2}{n}$
+```{r}
+u = 2000
+s = 500
+n = 625
+print(pnorm(1980, mean =u, s=s / sqrt(n), lower.tail=FALSE))
+
+```
+b. What is the probability that more than 60 of thesampled forms have a tax of greater than \$3000?
+
+Lets consider the random variable $Y =$ The tax paid was greater than 3000. The probability is $p=0.1$
+We want to see the probability of 
+$$ P(Y_1 + Y_2 +...+Y_{625} > 60) $$
+```{r}
+p = 0.1
+print(pnorm(60/625, mean=p, sd=p*(1-p)/sqrt(n), lower.tail=FALSE))
+```
+
+5. Bags checked for a certain airline flight have a meanweight of 15 kg with a standard deviation of 5 kg. A random sample of 60 bags is drawn
+
+a. What is the probability that the sample meanweight is less than 14 kg?
+```{r}
+s = 5
+n = 60
+t = (14 - 15)/(5/sqrt(n))
+print(pnorm(t, lower.tail=TRUE))
+```
+b. Find the 70th percentile of the sample mean weights.
+$$
+\begin{align*}
+P\left( \dfrac{\hat{X} - \mu}{\sigma / \sqrt{n}} < z\right) &= \Phi(z) = 0.7 \\
+z = \Phi^{-1}(0.7)
+\end{align*}
+$$
+```{r}
+z = qnorm(0.7)
+print(z)
+```
+
+$$
+\begin{align*}
+P\left( \dfrac{\hat{X} - \mu}{\sigma / \sqrt{n}} < 0.5244005 \right) &=  0.7 \\
+P\left(\hat{X}  < 0.5244005 \dfrac{\sigma}{\sqrt{n}} + \mu \right) &=  0.7 \\
+\end{align*}
+$$
+```{r}
+z = qnorm(0.7)
+s = 5
+n = 60
+mu = 15
+print(z*(s/sqrt(n)) + mu)
+
+```
+
+c. How many bags must be sampled so that the prob-ability is 0.01 that the sample mean weight is less than 14 kg?
+$$
+\begin{align*}
+P\left( \dfrac{\hat{X} - \mu}{\sigma / \sqrt{n}} < z \right) &=  \Phi(z) = 0.01 \\
+z_{0.01} &= \Phi^{-1}(0.01) \\
+P\left( \dfrac{14 - 15}{5 / \sqrt{n}} < z_{0.01} \right) &=   0.01 \\
+P\left( \dfrac{-1\sqrt{n}}{5 } < z_{0.01} \right) &=   0.01 \\
+P\left( \sqrt{n} > - z_{0.01} 5 \right) &=   0.01 \\
+P\left( n > (- z_{0.01} 5)^2 \right) &=   0.01 \\
+\end{align*}
+$$
+```{r}
+z = qnorm(0.01)
+s = 5
+print((z*s)^2)
+```
+Necesito 136 samples.
+
+6. The amount of warpage in a type of wafer used in themanufacture of integrated circuits has mean 1.3 mm and standard deviation 0.1 mm. A random sample of 200 wafers is drawn.
+
+a. What is the probability that the sample meanwarpage exceeds 1.305 mm?
+```{r}
+mu = 1.3
+X = 1.305
+s = 0.1
+n = 200
+z = (X-mu)/(s/sqrt(n))
+print(pnorm(z, lower.tail=FALSE))
+```
+b. Find the 25th percentile of the sample mean.
+```{r}
+mu = 1.3
+s = 0.1
+n = 200
+z = qnorm(0.25)
+print(z*(s/sqrt(n)) + mu)
+```
+c. How many wafers must be sampled so thatthe probability is 0.05 that the sample meanexceeds 1.305?
+$$
+\begin{align*}
+P\left(\dfrac{\hat{X} - \mu}{\sigma/\sqrt{n}} < z\right) &= \Phi(z) = 0.05 \\
+z_{0.05} &= \Phi^{-1}(0.05) \\
+P\left( \hat{X} - \mu < z_{0.05}\dfrac{\sigma}{\sqrt{n}} \right) &= 0.05 \\
+P\left( \sqrt{n} < z_{0.05}\dfrac{\sigma}{\hat{X} - \mu} \right) &= 0.05 \\
+P\left( n < \left(z_{0.05}\dfrac{\sigma}{\hat{X} - \mu}\right)^2 \right) &= 0.05 \\
+\end{align*}
+$$
+```{r}
+mu = 1.3
+s = 0.1
+n = 200
+z = qnorm(0.05)
+print(((z  * s)/(1.305 - mu))^2)
+```
+
+7. The time spent by a customer at a checkout counterhas mean 4 minutes and standard deviation 2 minutes.
+
+a. What is the probability that the total time taken bya random sample of 50 customers is less than 180minutes?
+$$
+\begin{align*}
+P\left( \dfrac{\hat{X} - \mu}{\sigma / \sqrt{n}} < z \right) = \Phi(z) \\
+P\left( \dfrac{\hat{X} - \mu}{\sigma / \sqrt{n}}\dfrac{n}{n} < z \right) = \Phi(z) \\
+P\left( \dfrac{S_X - \mu n}{\sigma \sqrt{n}} < z \right) = \Phi(z) \\
+\end{align*}
+$$
+```{r}
+mu = 4
+Sx = 180
+n = 50
+s = 2
+t  = (Sx-(mu*n))/(s*sqrt(n))
+print(pnorm(t, lower.tail=TRUE))
+```
+b. Find the 30th percentile of the total time taken by  50 customers
+```{r}
+z = qnorm(0.3)
+print(z*s*sqrt(n)  + mu*n)
+```
+8. Drums labeled 30 L are filled with a solution froma large vat. The amount of solution put into eachdrum is random with mean 30.01 L and standarddeviation 0.1 L.
+
+a. What is the probability that the total amountof solution contained in 50 drums is morethan 1500 L?
+```{r}
+n = 50
+X = 1500
+s = 0.1
+t = (1500 - 30.01*n)/(s*sqrt(n))
+print(t)
+print(pnorm(t, lower.tail=FALSE))
+```
+b. If the total amount of solution in the vat is 2401 L,what is the probability that 80 drums can be filledwithout running out?
+$$
+\begin{align*}
+P\left( \sum\limits_{i=1}^{n} X_i \leq V \right) = P\left( \dfrac{\sum\limits_{i=1}^{n} X_i - \mu n}{\sigma \sqrt{n}}  \leq \dfrac{V - \mu n}{\sigma \sqrt{n}} \right)  = \Phi \left(\dfrac{V - \mu n}{\sigma \sqrt{n}} \right) \\
+\end{align*}
+$$
+```{r}
+n = 80
+V = 2401
+u = 30.01
+s = 0.1
+t = (V - u*n)/(s*sqrt(n))
+print(t)
+print(pnorm(t, lower.tail=TRUE))
+```
+c. How much solution should the vat contain so that the probability is 0.9 that 80 drums can be filledwithout running out?
+$$
+\begin{align*}
+P \left( \sum\limits_{i=1}^n X_i \leq V \right) = 0.9 \\
+P \left( \dfrac{\sum\limits_{i=1}^n X_i - n \mu}{\sigma \sqrt{n}} \leq \dfrac{V - n \mu}{\sigma \sqrt{n}} \right) &= 0.9 = \Phi\left(\dfrac{V - n \mu}{\sigma \sqrt{n}}\right) \\
+\Phi^{-1}(0.9) &= \dfrac{V - n \mu}{\sigma \sqrt{n}} \\
+\Phi^{-1}(0.9) &= \dfrac{V - n \mu}{\sigma \sqrt{n}} \\
+\Phi^{-1}(0.9)\sigma \sqrt{n} + n \mu &= V
+\end{align*}
+$$
+
+```{r}
+n = 80
+u = 30.01
+s = 0.1
+print(qnorm(0.9)*s*sqrt(n) + n*u)
+```
+
+
+
+9. The temperature of a solution will be estimated by taking n independent readings and averaging them.Each reading is unbiased, with a standard deviationof σ=0.5◦C. How many readings must be taken sothat the probability is 0.90 that the average is within±0.1◦C of the actual temperature?
+  
+$$
+\begin{align*}
+P \left( \left\vert \hat{X}_n  \right\vert \leq 0.1 \right) &= 0.9 \\
+P \left( \left\vert \dfrac{\hat{X}_n}{\sigma/\sqrt{n}} \right\vert \leq \dfrac{0.1}{\sigma/\sqrt{n}} \right) &= 0.9 \\
+P \left( \left\vert Z \right\vert \leq \dfrac{0.1}{\sigma/\sqrt{n}} \right) &= 0.9 \\
+P \left( -\dfrac{0.1}{\sigma/\sqrt{n}} \leq  Z  \leq \dfrac{0.1}{\sigma/\sqrt{n}} \right) &= 0.9 \\
+P \left( -\dfrac{0.1}{\sigma/\sqrt{n}} \leq  Z  \leq \dfrac{0.1}{\sigma/\sqrt{n}} \right) &= 0.9 \\
+P\left(Z  \leq \dfrac{0.1}{\sigma/\sqrt{n}} \right) - P \left( Z \leq -\dfrac{0.1}{\sigma/\sqrt{n}} \right) &= 0.9 \\
+\text{Ver la explicación mas abajo de porque } & P(Z \leq -v) = 1-P(Z \leq v) \\
+P\left(Z  \leq \dfrac{0.1}{\sigma/\sqrt{n}} \right) - \left( 1- P \left( Z \leq
+\dfrac{0.1}{\sigma/\sqrt{n}} \right) \right) &= 0.9 \\
+2 P\left(Z  \leq \dfrac{0.1}{\sigma/\sqrt{n}} \right) - 1 &= 0.9 \\
+P\left(Z  \leq \dfrac{0.1}{\sigma/\sqrt{n}} \right) &= \frac{1.9}{2} = \Phi \left( \dfrac{0.1}{\sigma/\sqrt{n}} \right) \\
+\Phi^{-1}\left(  \frac{1.9}{2}  \right)  &= \dfrac{0.1 \sqrt{n}}{\sigma} \\
+\Phi^{-1}\left(  \frac{1.9}{2}  \right) \frac{\sigma}{0.1}  &= \sqrt{n} \\
+\left( \Phi^{-1}\left(  \frac{1.9}{2}  \right) \frac{\sigma}{0.1} \right)^2 &= n\\
+\end{align*}
+$$
+
+
+```{r}
+s = 0.5
+v = 0.1
+t = qnorm(1.9/2)
+print(t)
+print(ceiling(((t*s)/v)^2))
+```
+
+### $P(Z \leq -v) = 1-P(Z \leq v)$
+Clearly the red area is equal to 1 - the blue area
+```{r echo=FALSE}
+mean=0; sd=1
+lb=-555.1; ub=-1.1
+
+x <- seq(-4,4,length=500)*sd + mean
+hx <- dnorm(x,mean,sd)
+
+plot(x, hx, type="n", ylab="",
+  main="Normal Distribution", axes=FALSE)
+
+i <- x >= lb & x <= ub
+lines(x, hx)
+polygon(c(lb,x[i],ub), c(0,hx[i],0), col="red")
+
+area <- pnorm(ub, mean, sd) - pnorm(lb, mean, sd)
+axis(1, at=seq(40, 160, 20), pos=0) 
+
+lb1=1.1; ub1=5555.5
+i <- x >= lb1 & x <= ub1
+polygon(c(lb1,x[i],ub1), c(0,hx[i],0), col="blue")
+
+area <- pnorm(ub1, mean, sd) - pnorm(lb1, mean, sd)
+abline(v =lb1)
+abline(v =ub)
+mtext("v", at=lb1)
+mtext("-v", at=ub)
+```
