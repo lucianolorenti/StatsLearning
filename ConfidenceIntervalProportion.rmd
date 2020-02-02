@@ -1,0 +1,390 @@
+---
+title: "ConfidenceIntervalProportion"
+author: "Luciano Lorenti"
+date: "26/1/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+1. In a simple random sample of 70 automobiles registered in a certain state, 28 of them were found to have emission levels that exceed a state standard.
+a. What proportion of the automobiles in the sample had emission levels that exceed the standard?
+```{r}
+print(28/70)
+```
+b. Find a 95% confidence interval for the proportion of automobiles in the state whose emission levels exceed the standard.
+```{r}
+n = 70
+n = n +4
+suc = 28 +2 
+p = (suc)/(n)
+z = qnorm((1+0.95)/2)
+print(paste(p-z*sqrt(p*(1-p)/n), " - ", p + z*sqrt(p*(1-p)/n)))
+```
+c. Find a 98% confidence interval for the proportion of automobiles whose emission levels exceed the standard.
+```{r}
+n = 70
+n = n + 4
+suc = 28 +2 
+p = (suc)/(n)
+z = qnorm(1.98/2)
+print(paste(p-z*sqrt(p*(1-p)/n), " - ", p + z*sqrt(p*(1-p)/n)))
+```
+d. How many automobiles must be sampled to specify the proportion that exceed the standard to within±0.10 with 95% confidence?
+$$
+P(p-0.10 \leq p \leq p + 0.10) = 0.95
+$$
+
+$$
+\begin{align*}
+\hat{p} + z_{\alpha/2}\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}} &= p + 0.10 \\
+z_{\alpha/2}\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}} &=  0.10 \\
+z_{\alpha/2}\dfrac{\sqrt{\hat{p}(1-\hat{p})}}{0.1} &=  \sqrt{n} \\
+z_{\alpha/2}^2\dfrac{\hat{p}(1-\hat{p})}{0.1^2} &=  n \\
+\end{align*}
+$$
+```{r}
+n = 70
+n = n +4 
+suc = 28 +2 
+p = (suc)/(n)
+z = qnorm(1.95/2)
+print(ceiling( (z/0.1)^2 * p*(1-p)  -4 ))
+```
+Note that I used the $p$ using the $n+4$ and success + 2 trick. But when we compute the $n$ we have to substract the additional 4 added.
+e. How many automobiles must be sampled to specify the proportion that exceed the standard to within±0.10 with 98% confidence?
+```{r}
+n = 70
+n = n +4 
+suc = 28 +2 
+p = (suc)/(n)
+z = qnorm(1.98/2)
+print(ceiling( (z/0.1)^2 * p*(1-p)  -4 ))
+```
+f. Someone claims that less than half of the automobiles in the state exceed the standard. With whatlevel of confidence can this statement be made?
+$$
+\begin{align*}
+P \left(  p < 0.5 \right) &=  \alpha \\
+P \left( \dfrac{p - \hat{p}}{\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}} < \dfrac{0.5- \hat{p}}{\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}} \right) &=  \alpha \\
+P \left( Z < \dfrac{0.5- \hat{p}}{\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}} \right) &=  \alpha \\
+\end{align*} \\
+$$
+```{r}
+n = 70
+n = n +4 
+suc = 28 +2 
+p = (suc)/(n)
+z = (0.5-p)/(sqrt((p*(1-p))/(n)))
+print(pnorm(z))
+```
+
+2. During a recent drought, a water utility in a certaintown sampled 100 residential water bills and foundthat 73 of the residences had reduced their water con-sumption over that of the previous year.
+```{r}
+n = 100 + 4
+suc = 73 + 2
+p = suc/n
+```
+a. Find a 95% confidence interval for the proportion of residences that reduced their water consumption.
+```{r}
+z = qnorm(1.95/2)
+s = sqrt(p*(1-p)/n)
+paste(p-z*(s), " - ", p+z*s)
+```
+b. Find a 99% confidence interval for the proportion of residences that reduced their water consumption.
+```{r}
+z = qnorm(1.99/2)
+s = sqrt(p*(1-p)/n)
+paste(p-z*(s), " - ", p+z*s)
+```
+c. Find the sample size needed for a 95% confidenceinterval to specify the proportion to within ± 0.05.
+$$
+\begin{align*}
+P\left( p-0.05 < p < p+0.05 \right) &= 0.95  \\
+P\left( \hat{p}- z_{\frac{\alpha}{2}}\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}} <p<\hat{p} + z_{\frac{\alpha}{2}}\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}} \right) &= 0.95  \\
+\hat{p} + 0.05 &= \hat{p} + z_{\frac{\alpha}{2}}\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}} \\
+ 0.05 &= z_{\frac{\alpha}{2}}\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}} \\
+ \sqrt{n} &= \dfrac{ z_{\frac{\alpha}{2}}}{0.05}\sqrt{\hat{p}(1-\hat{p}}) \\
+ n &= \left( \dfrac{ z_{\frac{\alpha}{2}}}{0.05} \right)^2 \hat{p}(1-\hat{p})
+\end{align*}
+$$
+```{r}
+n = 100 + 4
+suc = 73 + 2
+p = suc/n
+z = qnorm(1.95/2)
+n = ((z/0.05)^2)*(p*(1-p))
+print(ceiling(n-4))
+```
+d. Find the sample size needed for a 99% confidenceinterval to specify the proportion to within ± 0.05.
+```{r}
+n = 100 + 4
+suc = 73 + 2
+p = suc/n
+z = qnorm(1.99/2)
+n = ((z/0.05)^2)*(p*(1-p))
+print(ceiling(n-4))
+```
+e. Someone claims that more than 70% of residences reduced their water consumption. With what level of confidence can this statement be made?
+
+$$
+\begin{align*}
+P\left( x >0.7 \right) &= \alpha \\
+1- P\left(  x< 0.7 \right) &= \alpha \\
+1-P\left(  x< 0.7 \right) &= \alpha  \\
+1-P\left( \dfrac{x-\hat{p}}{\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}}} < \dfrac{0.7 - \hat{p}}{\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}}} \right) &= \alpha  \\
+1-P\left( Z < \dfrac{0.7 - \hat{p}}{\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}}} \right) &= \alpha \\
+\end{align*}
+$$
+
+```{r}
+n = 100 + 4
+suc = 73 + 2
+p = suc/n
+z = (0.7 - p)*sqrt(p*(1-p)/n)
+print(1-pnorm(z))
+```
+
+
+
+f. If 95% confidence intervals are computed for 200 towns, what is the probability that more than 192 of the confidence intervals cover the true proportions?
+$X  \sim Bin(200, 0.95)$. 
+
+$$ P(X  > 192) = 1-P(x<192)$$
+
+ $X$ can be approximated with $N(np, np(1-p))$
+ 
+```{r}
+n = 200
+p = 0.95
+u = n*p
+s = n*p*(1-p)
+z = (192 - u)/(sqrt(s))
+print(1-pnorm(z))
+print(1-pbinom(192, n, p))
+```
+
+
+3. A soft-drink manufacturer purchases aluminum cansfrom an outside vendor. A random sample of 70 cansis selected from a large shipment, and each is testedfor strength by applying an increasing load to the sideof the can until it punctures. Of the 70 cans, 52 meetthe specification for puncture resistance.
+a. Find a 95% confidence interval for the proportionof cans in the shipment that meet the specification.
+```{r}
+n = 70 + 4
+suc = 52 + 2
+p = suc/n
+z = qnorm(1.95/2)
+paste(p - z*sqrt((p*(1-p))/n), " - ", p + z*sqrt((p*(1-p))/n))
+```
+b. Find a 90% confidence interval for the proportionof cans in the shipment that meet the specification.
+```{r}
+n = 70 + 4
+suc = 52 + 2
+p = suc/n
+z = qnorm(1.90/2)
+paste(p - z*sqrt((p*(1-p))/n), " - ", p + z*sqrt((p*(1-p))/n))
+```
+c. Find the sample size needed for a 95% confidenceinterval to specify the proportion to within±0.05.
+```{r}
+n = 70 + 4
+suc = 52 + 2
+p = suc/n
+z = qnorm(1.95/2)
+n = (z/0.05)^2 * p*(1-p)
+print(ceiling(n-4))
+```
+d. Find the sample size needed for a 90% confidenceinterval to specify the proportion to within±0.05.
+```{r}
+n = 70 + 4
+suc = 52 + 2
+p = suc/n
+z = qnorm(1.90/2)
+n = (z/0.05)^2 * p*(1-p)
+print(ceiling(n-4))
+```
+e. If a 90% confidence interval is computed each dayfor 300 days, what is the probability that more than 280 of the confidence intervals cover the true proportions?
+Let $X \sim Bin(300, 0.9)$, I want to know $P(X > 280) = 1-P(X \leq 280)$
+If $X \sim Bin(n, p)$ then $X \approx N(np, np(1-p))$. Let's call $Y \sim N(np, np(1-p))$ and 
+$Z \sim N(0, 1)$.
+
+$$
+P(X \leq 280) \approx P(Y \leq 280) = P\left(Z \leq \dfrac{280 - np}{\sqrt{np(1-p)}}\right)
+$$
+
+
+```{r}
+n = 300
+p = 0.9
+u = n*p
+s = n*p*(1-p)
+z = (280 - u)/(sqrt(s))
+print(1-pnorm(280, mean = n*p, sd=sqrt(s)))
+print(1-pnorm(z))
+print(1-pbinom(280, 300, p))
+```
+
+4. The article “HIV-positive Smokers Considering Quit-ting: Differences by Race/Ethnicity” (E. Lloyd-Richardson, C. Stanton, et al.,Am J Health Behav,2008:3–15) surveyed 444 HIV-positive smokers. Ofthese, 170 reported that they had used a nicotine patch.Consider this to be a simple random sample.
+
+```{r}
+n = 444 + 4
+suc = 170 + 2
+p = suc /n
+print(p)
+```
+a. Find a 95% confidence interval for the proportionof HIV-positive smokers who have used a nicotinepatch.
+```{r}
+n = 444 + 4
+suc = 170 + 2
+p = suc /n
+z = qnorm(1.95/2)
+dt = z*sqrt(p*(1-p)/n)
+paste(p - dt, " - ",p + dt)
+```
+b. Find a 99% confidence interval for the proportionof HIV-positive smokers who have used a nicotinepatch.
+```{r}
+n = 444 + 4
+suc = 170 + 2
+p = suc /n
+z = qnorm(1.99/2)
+dt = z*sqrt(p*(1-p)/n)
+paste(p - dt, " - ",p + dt)
+```
+c. Someone claims that the proportion is less than 0.40. With what level of confidence can this state-ment be made?
+$$
+\begin{align*}  
+P\left( p < 0.4 \right) &= \alpha \\
+P\left( \dfrac{p - \hat{p}}{\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}}} < \dfrac{0.4 - \hat{p}}{\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}}} \right) &= \alpha \\
+P\left( Z < \dfrac{0.4 - \hat{p}}{\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}}} \right) &= \alpha \\
+\end{align*}
+$$
+
+```{r}
+n = 444 + 4
+suc = 170 + 2
+p = suc /n
+z = (0.4 -p )/sqrt(p*(1-p)/n)
+print(pnorm(z))
+```
+d. Find the sample size needed for a 95% confi-dence interval to specify the proportion to within±0.03.
+$$
+\begin{align*}
+P\left(\hat{p} - 0.03 < p < \hat{p}+0.03 \right) &= 0.95 \\
+P\left(\hat{p} - z_{\frac{\alpha}{2}}\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}} < p < \hat{p} + z_{\frac{\alpha}{2}}\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}} \right) &= 0.95 \\
+\hat{p} + 0.03 = \hat{p} + z_{\frac{\alpha}{2}}\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}} \\
+ 0.03 =  z_{\frac{\alpha}{2}}\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}} \\
+ \sqrt{n} =  \dfrac{z_{\frac{\alpha}{2}}}{0.03}\sqrt{\hat{p}(1-\hat{p})}  \\
+ n =  \left( \dfrac{z_{\frac{\alpha}{2}}}{0.03}\right)^2 \hat{p}(1-\hat{p})
+\end{align*}
+$$
+```{r}
+n = 444 + 4
+suc = 170 + 2
+p = suc /n
+z = qnorm(1.95/2)
+n = ((z/0.03)^2)*(p*(1-p))
+print(ceiling(n - 4))
+```
+e. Find the sample size needed for a 99% confidence interval to specify the proportion to within±0.03.
+```{r}
+n = 444 + 4
+suc = 170 + 2
+p = suc /n
+z = qnorm(1.99/2)
+n = ((z/0.03)^2)*(p*(1-p))
+print(ceiling(n - 4))
+```
+
+5. The article “The Functional Outcomes of Total Knee Arthroplasty” (R. Kane, K. Saleh, et al., Journal of Bone and Joint Surgery, 2005:1719–1724) reports that out of 10,501 surgeries, 859 resulted in complications within six months of surgery.
+a. Find a 95% confidence interval for the proportion of surgeries that result in complications within six months.
+```{r}
+n = 10501 + 4
+suc = 859 + 2
+p = suc/n
+z = qnorm(1.95/2)
+dt = z*sqrt(p*(1-p)/n)
+paste(p-dt, " - ", p+dt)
+```
+b. Find a 99% confidence interval for the proportion of surgeries that result in complications within six months.
+```{r}
+n = 10501 + 4
+suc = 859 + 2
+p = suc/n
+z = qnorm(1.99/2)
+dt = z*sqrt(p*(1-p)/n)
+paste(p-dt, " - ", p+dt)
+```
+c. A surgeon claims that the rate of complications is less than 8.5%. With what level of confidence can this claim be made?
+
+$$
+\begin{align*}
+P\left(x < 0.085 \right) &= \alpha \\
+P\left( \dfrac{x -\hat{p}}{\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}}} < \dfrac{0.085 -\hat{p}}{\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}}} \right) &= \alpha \\
+P\left(Z < \dfrac{0.085 -\hat{p}}{\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}}} \right) &= \alpha \\
+\end{align*}
+$$
+```{r}
+n = 10501 + 4
+suc = 859 + 2
+p = suc/n
+z = (0.085 - p)/(sqrt(p*(1-p)/n))
+print(pnorm(z))
+```
+
+9. A random sample of 400 electronic components manufactured by a certain process are tested, and 30 are found to be defective.
+a. Let p represent the proportion of components manufactured by this process that are defective. Find a 95% confidence interval for p.
+```{r}
+n = 400 + 4
+suc = 30 + 2
+p = suc/n
+z = qnorm(1.95/2)
+dt = sqrt(p*(1-p)/n)
+paste(p - z*dt, " - ", p + z*dt)
+```
+b. How many components must be sampled so that the 95% confidence interval will specify the proportion defective to within ±0.02?
+$$
+\begin{align*}
+P\left( \hat{p}-0.02 < p < \hat{p}+0.02 \right) &= 0.95 \\
+P\left( \hat{p} - z_{\frac{\alpha}{2}}\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}} < p < \hat{p} + z_{\frac{\alpha}{2}}\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}} \right) &= 0.95 \\
+0.02 &= z_{\frac{\alpha}{2}}\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n}} \\
+\sqrt{n} &= \dfrac{z_{\frac{\alpha}{2}}}{0.02}\sqrt{\hat{p}(1-\hat{p})} \\
+n &= \left( \dfrac{z_{\frac{\alpha}{2}}}{0.02}\right)^2 \hat{p}(1-\hat{p}) \\
+\end{align*}
+$$
+
+```{r}
+n = 400 + 4
+suc = 30 + 2
+p = suc/n
+z = qnorm(1.95/2)
+n = ((z/0.02)^2)*p*(1-p)
+paste(ceiling(n -4))
+```
+```{r}
+n = 400 + 4
+suc = 30 + 2
+p = suc/n
+z = qnorm(1.95/2)
+dt = sqrt(p*(1-p)/n)
+paste(p - z*dt, " - ", p + z*dt)
+```
+c. (Hard) The company ships the components in lots of 200. Lots containing more than 20 defective components may be returned. Find a 95% confidence interval for the proportion of lots that will be returned.
+$ X \sim Bin(200, p)$  then $p1 = P(X>20) = 1- P(X \leq 20)$
+
+```{r}
+n = 400 + 4
+suc = 30 + 2
+p = suc/n
+z = qnorm(1.95/2)
+dt = sqrt(p*(1-p)/n)
+plb = p - z*dt
+pub = p + z*dt
+
+n = 200
+lb1 = 1 - pbinom(20, n, plb)
+ub1 = 1 - pbinom(20, n, pub)
+paste(lb1, " - ", ub1)
+
+lb1 = 1 - pnorm(20, mean=n*plb, sd=sqrt(n*plb*(1-plb)))
+ub1 = 1 - pnorm(20, mean=n*pub, sd=sqrt(n*pub*(1-pub)))
+paste(lb1, " - ", ub1)
+
+```
+
