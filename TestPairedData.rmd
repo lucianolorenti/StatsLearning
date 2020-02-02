@@ -1,0 +1,26 @@
+---
+title: "TestPairedData"
+author: "Luciano Lorenti"
+date: "1/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(kableExtra)
+```
+1. The article “Improved Bioequivalence Assessmentof Topical Dermatological Drug Products UsingDermatopharmacokinetics” (B. N’Dri-Stempfer, W.Navidi, R. Guy, and A. Bunge,PharmaceuticalResearch, 2009:316–328) described a study compar-ing the amounts of econozole nitrate absorbed intohuman skin for several formulations of antifungalointment. Both a brand name and generic drug wereapplied to the arms of 14 subjects, and the amountsabsorbed, inμg/cm2, were measured. Following arethe results. Can you conclude that the mean amountabsorbed differs between the brand name and thegeneric drug?
+
+```{r ej1}
+data = c(2.23, 1.42, 0.81, 1.68, 1.95, -0.27, 1.96, 2.58, -0.62, 2.81, 2.25, 0.56, 1.14, 1.21, -0.07, 3.20, 3.01, 0.19, 2.33, 2.76, -0.43, 4.06, 3.65, 0.41, 2.92, 2.89, 0.03, 2.92, 2.85, 0.07, 2.83, 2.44, 0.39, 3.45, 3.11, 0.34, 2.72, 2.64, 0.08, 3.74, 2.82, 0.92)
+mat = matrix(data, ncol=3, byrow = TRUE)
+df = as.data.frame(mat)
+colnames(df) = c("Brand Name",  "Generic", "Difference")
+kable(df)
+```
+
+```{r}
+data = df['Difference']
+data
+```

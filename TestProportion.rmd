@@ -1,0 +1,129 @@
+---
+title: "TestProportion"
+author: "Luciano Lorenti"
+date: "28/1/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+1.Integrated circuits consist of electric channels that are etched onto silicon wafers. A certain proportion of circuits are defective because of “undercutting,” which occurs when too much material is etched away so that the channels, which consist of the unetched portions of the wafers, are too narrow. A redesigned process, involving lower pressure in the etching chamber, is being investigated. The goal is to reduce the rate of undercutting to less than 5%. Out of the first 1000 circuits manufactured by the new process, only 35 show evidence of undercutting. Can you conclude that the goal has been met?
+
+$$ H_0: X \geq 5\% \hspace{15pt} X_1: X \leq 5\%$$
+```{r}
+porig = 0.05
+n = 1000 
+suc = 35 
+p = suc/n
+s = n*p*(1-p)
+z = (p - porig)/(sqrt(porig*(1-porig)/n))
+print(pnorm(z, lower.tail=TRUE))
+```
+YES
+
+2. The article “HIV-positive Smokers Considering Quitting: Differences by Race/Ethnicity” (E. Lloyd-Richardson, C. Stanton, et al., Am J Health Behav,
+2008:3–15) surveyed 444 HIV-positive smokers. Of these, 281 were male and 163 were female. Consider this to be a simple random sample. Can you conclude that more than 60% of HIV-positive smokers are male?
+
+$$ H_0: X \leq 60\% \hspace{15pt} X_1: X > 60\%$$
+```{r}
+porig = 0.6
+n = 444
+suc = 281
+p = suc/n
+z = (p - porig)/(sqrt(porig*(1-porig)/n))
+print(pnorm(z, lower.tail=FALSE))
+```
+NO
+3. Do bathroom scales tend to underestimate a person’s true weight? A 150 lb test weight was placed on each of 50 bathroom scales. The readings on 29 of the scales were too light, and the readings on the other 21 were too heavy. Can you conclude that more than half of bathroom scales underestimate weight?
+
+$$ H_0: X \leq 50\% \hspace{15pt} H_1: X > 50\%$$
+```{r}
+porig = 0.5
+n = 50
+suc = 29
+p = suc/n
+z = (p - porig)/(sqrt(porig*(1-porig)/n))
+print(pnorm(z, lower.tail=FALSE))
+```
+NO
+
+4. The article “Evaluation of Criteria for Setting Speed Limits on Gravel Roads” (S. Dissanayake, Journal of Transportation Engineering, 2011:57–63) measured
+speeds of vehicles on several roads in the state of Kansas. On South Cedar Niles, 73 vehicles were observed, and 49 of them were exceeding the speed limit.
+Can you conclude that more than half of the vehicles on South Cedar Niles exceed the speed limit?
+
+$$ H_0: X \leq 50\% \hspace{15pt} H_1: X > 50\%$$
+```{r}
+porig = 0.5
+n = 73
+suc = 49
+p = suc/n
+z = (p - porig)/(sqrt(porig*(1-porig)/n))
+print(pnorm(z, lower.tail=FALSE))
+```
+YES
+
+5. In a survey of 500 residents in a certain town, 274 said they were opposed to constructing a new shopping mall. Can you conclude that more than half of the residents in this town are opposed to constructing a new shopping mall?
+
+$$ H_0: X \leq 50\% \hspace{15pt} H_1: X > 50\%$$
+```{r}
+porig = 0.5
+n = 500 
+suc = 274 
+p = suc/n
+z = (p - porig)/(sqrt(porig*(1-porig)/n))
+print(pnorm(z, lower.tail=FALSE))
+```
+YES
+
+
+6. The article “Application of Surgical Navigation to Total Hip Arthroplasty” (T. Ecker and S. Murphy, Journal of Engineering in Medicine, 2007:699–712) reports that in a sample of 113 people undergoing a certain type of hip replacement surgery on one hip, 65 of them had surgery on their right hip. Can you conclude that frequency of this type of surgery differs between right and left hips?
+```{r}
+porig = 0.5
+n = 113
+suc = 65 
+p = suc/n
+z = (p - porig)/(sqrt(porig*(1-porig)/n))
+print(pnorm(z, lower.tail=FALSE))
+```
+YES
+
+7. In a sample of 150 households in a certain city, 110 had high-speed internet access. Can you conclude that more than 70% of the households in this city have high-speed internet access?
+
+```{r}
+porig = 0.7
+n = 150
+suc = 110 
+p = suc/n
+z = (p - porig)/(sqrt(porig*(1-porig)/n))
+print(pnorm(z, lower.tail=FALSE))
+```
+NO
+
+
+8. A grinding machine will be qualified for a particular task if it can be shown to produce less than 8% defective parts. In a random sample of 300 parts, 12 were defective. On the basis of these data, can the machine be qualified?
+
+```{r}
+porig = 0.08
+n = 300
+suc = 12
+p = suc/n
+z = (p - porig)/(sqrt(porig*(1-porig)/n))
+print(pnorm(z, lower.tail=TRUE))
+```
+YES
+
+9. Let A and B represent two variants (alleles) of the DNA at a certain locus on the genome. Assume that 40% of all the alleles in a certain population are type A and 30% are type B. The locus is said to be in Hardy-Weinberg equilibrium if the proportion of organisms that are of type AB is (0.40)(0.30) = 0.12. In a sample of 300 organisms, 42 are of type AB. Can you conclude that this locus is not in Hardy-Weinberg equilibrium?
+
+$$
+H_0: p = 0.12 \hspace{15pt} H_1: p \neq 0.12
+$$
+```{r}
+porig = 0.12
+n = 300
+suc = 42
+p = suc/n
+z = (p - porig)/(sqrt(porig*(1-porig)/n))
+print(pnorm(-z, lower.tail=TRUE) + pnorm(z, lower.tail=FALSE))
+```
+YES

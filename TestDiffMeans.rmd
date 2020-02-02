@@ -1,0 +1,221 @@
+---
+title: "TestDifferenceBetweenMeans"
+author: "Luciano Lorenti"
+date: "1/30/2020"
+output: html_document
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+library('stringr')
+degrees_of_freedom <- function(var1, n1, var2, n2) {
+    p1 = var1/n1
+    p2 = var2/n2
+    
+    floor(((p1 + p2)^2)/((p1^ 2)/(n1-1) + (p2^2)/(n2-1)))
+}
+degrees_of_freedom_array <- function(data1, data2) {
+    var1 = var(data1)
+    n1 = length(data1)
+    
+    var2 = var(data2)
+    n2 = length(data2)
+    degrees_of_freedom(var1, n1, var2, n2)
+}
+t_statistic <- function(u1, var1, n1, u2, var2, n2, v=0)
+{
+    p1 = var1/n1
+    p2 = var2/n2
+
+    (u1-u2-v)/(sqrt( (p1) + (p2)))
+}
+t_statistic_array <- function(data1, data2, v=0) {
+    u1 = mean(data1)
+    var1 = var(data1)
+    n1 = length(data1)
+    
+    u2 = mean(data2)
+    var2 = var(data2)
+    n2 = length(data2)
+    
+    t_statistic(u1, var1, n1, u2, var2, n2, v)
+}
+```
+
+
+1. A crayon manufacturer is comparing the effects of twokinds of yellow dye on the brittleness of crayons. DyeB is more expensive than dye A, but it is thought thatit might produce a stronger crayon. Four crayons aretested with each kind of dye, and the impact strength(in joules) is measured for each. The results are asfollows
+
+Dye A:  1.0  2.0  1.2  3.0
+Dye B:  3.0  3.2  2.6  3.4
+
+a. Can you conclude that the mean strength of crayonsmade with dye B is greater than that of crayonsmade with dye A?
+```{r}
+dye_a = c(1.0, 2.0, 1.2, 3.0)
+dye_b = c(3.0, 3.2, 2.6, 3.4)
+
+
+
+v1 = degrees_of_freedom_array(dye_b, dye_a)
+t1 = t_statistic_array(dye_b, dye_a)
+print(v1)
+print(t1)
+print(pt(t1, v1, lower.tail=FALSE))
+```
+Yes!
+b. Can you conclude that the mean strength of crayonsmade with dye B exceeds that of crayons made withdye A by more than 1 J?
+```{r}
+
+dye_a = c(1.0, 2.0, 1.2, 3.0)
+dye_b = c(3.0, 3.2, 2.6, 3.4)
+v = degrees_of_freedom_array(dye_b, dye_a)
+t = t_statistic_array(dye_b, dye_a, 1)
+print(pt(t, v, lower.tail=FALSE))
+
+```
+No!
+
+2. In a study of the relationship of the shape of a tablet toits dissolution time, 6 disk-shaped ibuprofen tabletsand 8 oval-shaped ibuprofen tablets were dissolvedin water. The dissolve times, in seconds, were asfollows:
+
+Disk: 269.0 249.3 255.2 252.7 247.0 261.6
+
+Oval:  268.8 260.0 273.5 253.9 278.5 289.4 261.6 280.2
+
+Can you conclude that the mean dissolve times differ between the two shapes?
+```{r}
+
+disk = c(269.0, 249.3, 255.2, 252.7, 247.0, 261.6)
+oval = c(268.8, 260.0, 273.5, 253.9, 278.5, 289.4, 261.6, 280.2)
+v = degrees_of_freedom_array(disk, oval)
+print(v)
+t = t_statistic_array(disk, oval)
+print(t)
+print(pt(-t, v, lower.tail=TRUE)+ pt(t, v, lower.tail=FALSE))
+```
+
+3.The article “Influence of Penetration Rate on Pen-etrometer Resistance” (J. Oliveira, M. Almeida, et al.,Journal   of   Geotechnical   and   GeoenvironmentalEngineering, 2011:695–703) presents measures of penetration resistance, expressed as a multiple of astandard quantity, for a certain fine-grained soil. Fif-teen measurements taken at a depth of 1 m had a mean of 2.31 with a standard deviation of 0.89. Fifteen mea-surements taken at a depth of 2 m had a mean of 2.80with a standard deviation of 1.10. Can you concludethat the penetration resistance differs between the twodepths
+```{r}
+n1 = 15
+u1= 2.31
+var1 = 0.89^2
+
+n2 = 15
+u2 = 2.8
+var2 = 1.10^2
+
+v = degrees_of_freedom(var1, n1, var2, n2)
+print(v)
+t = t_statistic(u1, var1, n1, u2, var2, n2)
+print(t)
+print(pt(t, v, lower.tail=TRUE) + pt(-t, v, lower.tail=FALSE))
+```
+
+5. The Mastic tree (Pistacia  lentiscus) is used in re-forestation efforts in southeastern Spain. The article“Nutrient Deprivation Improves Field Performanceof Woody Seedlings in a Degraded Semi-arid Shrub-land” (R. Trubata, J. Cortina, and A. Vilagrosaa,Ecological  Engineering, 2011:1164–1173) presentsa study that investigated the effect of adding slow-release fertilizer to the usual solution on the growthof trees. Following are the heights, in cm, of 10 treesgrown with the usual fertilizer (the control group),and 10 trees grown with the slow-release fertilizer(treatment). These data are consistent with the meanand standard deviation reported in the article. Can youconclude that the mean height of plants grown withslow-release fertilizer is greater than that of plantswith the usual fertilizer?
+
+Usual   17.3   22.0   19.5   18.7   19.518.5   18.6   20.3   20.3   20.3
+Slow-release   25.2   23.2   25.2   26.2   25.0 25.5   25.2   24.1   24.8   23.6
+
+```{r}
+usual = c(17.3,22.0,19.5,18.7,19.5, 18.5, 18.6, 20.3, 20.3, 20.3)
+slow = c(25.2, 23.2, 25.2, 26.2, 25.0, 25.5,   25.2,   24.1,   24.8,   23.6)
+v = degrees_of_freedom_array(slow, usual)
+t = t_statistic_array(slow, usual)
+p = pt(t, v, lower.tail=FALSE)
+str_interp('Degrees of freedom: ${v}. t-statistic: ${t}. Probability: ${p}')
+```
+YES
+
+
+7. It is thought that a new process for producing a cer-tain chemical may be cheaper than the currently usedprocess. Each process was run 6 times, and the cost of producing 100 L of the chemical was determinedeach time. The results, in dollars, were as follows:
+
+New Process:  51  52  55  53  54  53
+Old Process:  50  54  59  56  50  58
+
+Can you conclude that the mean cost of the newmethod is less than that of the old 
+
+$$ 
+\begin{align*}
+H_0: \text{new} \geq \text{old} &\text{ versus } \text{new} < \text{old}  \\
+H_0: \text{new} - \text{old} \geq 0 &\text{ versus } \text{new} - \text{old} < 0  \\
+\end{align*}
+$$
+
+```{r}
+new = c(51,  52,  55,  53,  54,  53)
+old = c(50,  54,  59,  56,  50,  58)
+v = degrees_of_freedom_array(new, old)
+t = t_statistic_array(new,old)
+p = pt(t, v, lower.tail=TRUE)
+str_interp('Degrees of freedom: ${v}. t-statistic: ${t}. Probability: ${p}')
+```
+NO
+9. The article “Wind-Uplift Capacity of ResidentialWood Roof-Sheathing Panels Retrofitted with In-sulating Foam Adhesive” (P. Datin, D. Prevatt,and W. Pang,Journal of Architectural Engineering,2011:144–154) presents a study of the failure pres-suresofroofpanels.A sample of 15 panels constructed with 8-inch nail spacing on the intermediate framingmembers had a mean failure pressure of 8.38 kPa witha standard deviation of 0.96 kPa. A sample of 15 pan-els constructed with 6-inch nail spacing on the inter-mediate framing members had a mean failure pressureof 9.83 kPa with a standard deviation of 1.02 kPa. Canyou conclude that 6-inch spacing provides a highermean failure pressure?
+
+$$
+\begin{align*}
+u_{6} \leq u_{8} &\text{ versus } u_{6} > u_{8} \\
+u_{6} - u_{8} \leq 0 &\text{ versus } u_{6} - u_{8} > 0 \\
+\end{align*}
+$$
+
+```{r}
+n1 = 15
+u1 = 8.38
+var1 = 0.96^2
+
+n2 = 15
+u2 = 9.83
+var2 = 1.02^2
+v = degrees_of_freedom(var1, n1, var2, n2)
+t = t_statistic(u2, var2, n2, u1, var1, n1)
+p = pt(t, v, lower.tail=FALSE)
+str_interp('Degrees of freedom: ${v}. t-statistic: ${t}. Probability: ${p}')
+```
+
+11. The article “Structural Performance of Rounded Dovetail Connections Under Different Loading Conditions” (T. Tannert, H. Prion, and F. Lam, Can J Civ Eng, 2007:1600–1605) describes a study of the deformation properties of dovetail joints. In one experiment, 10 rounded dovetail connections and 10 double rounded dovetail connections were loaded until failure. The rounded connections had an average load
+at failure of 8.27 kN with a standard deviation of0.62 kN. The double-rounded connections had an average load at failure of 6.11 kN with a standard devia tion of 1.31 kN. Can you conclude that the mean load at failure is greater for rounded connections than for double-rounded connections?
+$$
+\begin{align*}
+H_0: u_{r} \leq u_{dr} &\text{ versus } u_{r} > u_{dr} \\
+H_0: u_{r} - u_{dr} \leq 0 &\text{ versus } u_{r} - u_{dr} > 0
+\end{align*}
+$$
+```{r}
+nr = 10
+ur = 8.27
+varr = 0.62^2
+
+ndr = 10
+udr = 6.11
+vardr = 1.31^2
+v = degrees_of_freedom(varr, nr, vardr, ndr)
+t = t_statistic(ur, varr, nr, udr, vardr, ndr)
+p = pt(t, v, lower.tail=FALSE)
+str_interp('Degrees of freedom: ${v}. t-statistic: ${t}. Probability: ${p}')
+```
+YES
+
+13. In an experiment to test the effectiveness of a new sleeping aid, a sample of 12 patients took the new
+drug, and a sample of 14 patients took a commonly used drug. Of the patients taking the new drug, the
+average time to fall asleep was 27.3 minutes with a standard deviation of 5.2 minutes, and for the patients taking the commonly used drug the average time was 32.7 minutes with a standard deviation of 4.1 minutes. Can you conclude that the mean time to sleep is less for the new drug?
+
+$$
+\begin{align*}
+H_0: u_{old} \leq u_{new} &\text{ versus } u_{old} > u_{new} \\
+H_0: u_{old} - u_{new} \leq 0 &\text{ versus } u_{old} - u_{new} > 0
+\end{align*}
+$$
+
+```{r}
+nold = 14
+uold = 32.7
+varold = 4.1^2
+
+nnew = 12
+unew = 27.3
+varnew = 5.2^2
+v = degrees_of_freedom(varold, nold, varnew, nnew)
+t = t_statistic(uold, varold, nold, unew, varnew, nnew)
+p = pt(t, v, lower.tail=FALSE)
+str_interp('Degrees of freedom: ${v}. t-statistic: ${t}. Probability: ${p}')
+```
+YES

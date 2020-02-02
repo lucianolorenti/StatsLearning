@@ -1,0 +1,272 @@
+---
+title: "Confidence Intervals"
+author: "Luciano Lorenti"
+date: "11/26/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require('PEIP')
+```
+
+# Theory
+
+## $\mu$ unknown, bu $\sigma$ know
+To get an impression of the expectation $\mu$, it is sufficient to give an estimate. The appropriate estimator is the sample mean:
+
+$\hat{\mu} = \bar{X} = \frac{1}{n} \sum\limits_{i=1}^n X_i$
+
+By standardizing, we get a random variable:
+
+$Z = \frac{\bar{X} - \mu}{\alpha/\sqrt{n}} \sim N(0,1)$
+
+dependent on the parameter $\mu$ to be estimated, but with a standard normal distribution independent of the parameter $\mu$. Hence it is possible to find numbers $-z$ and $z$, independent of $\mu$, between which $Z$ lies with probability $1 − \alpha$, a measure of how confident we want to be.
+
+We take $1 − \alpha = 0.95$, for example. So we have:
+
+$\begin{align}
+P(-z \leq Z \leq z) &= 1-\alpha \\
+= 1 - P(Z \geq z) - P(Z \leq -z) \\
+\text{ Como la gaussiana es simétrica} \\
+P(Z \geq z) &=  P(Z \leq -z) \\
+\text{ entonces } \\
+P(-z \leq Z \leq z) &= 1 - 2P(Z \geq z) = 1- \alpha \\
+                   &= 2P(Z \geq z) = \alpha \\
+                   &= P(Z \geq z) = \frac{\alpha}{2} \\
+                   &= P(Z \geq z) = \frac{\alpha}{2}  \\
+                   &= 1-P(Z \leq z) = \frac{\alpha}{2}  \\
+                   &= 1-\frac{\alpha}{2}  = P(Z \leq z) \\
+                   &= 1-\frac{\alpha}{2}  = P(Z \leq z) \\
+\end{align}$
+
+¿For wich number of $z$ happens that $1-\frac{\alpha}{2}  = P(Z \leq z)$ ?
+
+Given that $Z$ follows a normal distribution $\Phi(z) = P(Z \leq z)$ then $z = \Phi^{-1}(\Phi(z)) \rightarrow z=\Phi^{-1}\left(1-\frac{\alpha}{2}\right)$
+
+Now suppouse that we know the value of $z$, let us call it  $z_\alpha$ then
+
+$\begin{align}
+P(-z_\alpha \leq Z \leq z_\alpha) &= 1 - \alpha \\
+P\left(-z_\alpha \leq \frac{\hat{X} - \mu}{\sigma / \sqrt{n}} \leq z_\alpha \right) = 1-\alpha \\
+P\left(-z_\alpha \frac{\sigma}{\sqrt{n}} \leq \hat{X} - \mu \leq \frac{\sigma}{\sqrt{n}} z_\alpha \right) = 1-\alpha \\
+P\left(-\hat{X} - z_\alpha \frac{\sigma}{\sqrt{n}} \leq - \mu \leq -\hat{X} + \frac{\sigma}{\sqrt{n}} z_\alpha \right) = 1-\alpha \\
+P\left(\hat{X} + z_\alpha \frac{\sigma}{\sqrt{n}} \geq  \mu \geq \hat{X} - \frac{\sigma}{\sqrt{n}} z_\alpha \right) = 1-\alpha \\
+P\left(\hat{X} - \frac{\sigma}{\sqrt{n}} z_\alpha \leq \mu \leq \hat{X} + z_\alpha \frac{\sigma}{\sqrt{n}}  \right) = 1-\alpha \\
+\end{align}$
+
+The limits of the interval is finally
+
+$\left[\hat{X} - \frac{\sigma}{\sqrt{n}} z_\alpha, \hat{X} + z_\alpha \frac{\sigma}{\sqrt{n}}  \right]$
+
+## $\mu$ unknown and $\sigma$ unknown
+
+¿What happens when the \sigma is unknown?
+
+We know that if $\hat{X}$ is the sample mean. $Z={\frac {{\overline {X}}_{n}-\mu }{\sigma /{\sqrt {n}}}}$ follows a Normal distribution with mean  0 and variance 1. But if we don't  the standar deviation we can think in a related quotient.
+
+$T = \frac{\hat{X} - \mu}{S_n / \sqrt{n}}$ where $S_n^2 = \frac{1}{n-1} \sum\limits_{i=1}^n (x_i - \hat{x})^2$ then Z follows a t-Student distribution with n-1 degrees of freedom. 
+
+# Excercises 
+
+1. Find the value of $t_{n-1,\alpha/2}$ needed to construct a two sided confidence interval of the given level with the given sample size:
+    Let $F(t)$ be the cumulative distribution of the t-student distribution
+    a. Level 90%, sample size 12.
+    
+        $\begin{align}
+            F(t) &= 1-\frac{0.1}{2} \\ 
+            F^{-1}\left(1-\frac{0.1}{2}\right) &= t
+        \end{align}$
+        ```{r}
+        qt(1-(0.1/2),  11)
+        ```
+    b. Level 95%, sample size 7.
+        ```{r}
+        qt(1-(0.05/2),  6)
+        ```
+    c. Level 99%, sample size 2.
+        ```{r}
+        qt(1-(0.01/2),  1)
+        ```
+    d. Level 95%, sample size 29.
+        ```{r}
+        qt(1-(0.05/2),  28)
+        ```
+2. Find the value of $t_{n−1,\alpha}$ needed to construct an upper or lower confidence bound in each of the situations in Exercise 1.
+    $\begin{align}
+        P(Z \leq z) = 1 - \alpha
+    \end{align}$
+    a. Level 90%, sample size 12.
+    
+        $\begin{align}
+            F(t) &= 1-\frac{0.1}{2} \\ 
+            F^{-1}\left(1-0.1\right) &= t
+        \end{align}$
+        ```{r}
+        qt(1-(0.1),  11)
+        ```
+    b. Level 95%, sample size 7.
+        ```{r}
+        qt(1-(0.05),  6)
+        ```
+    c. Level 99%, sample size 2.
+        ```{r}
+        qt(1-(0.01),  1)
+        ```
+    d. Level 95%, sample size 29.
+        ```{r}
+        qt(1-(0.05),  28)
+        ```
+3. Find the level of a two-sided confidence interval that is based on the given value of $t_{n−1,\alpha/2}$ and the given sample size.
+
+\begin{align}
+    P(-t \leq Z \leq t) &=  1 - P(Z \geq t) - P(Z \leq -t) \\
+                    c &=  1 - 2P(Z \geq t) \\
+                    c &= 1-2(1-P(Z \leq t)) \\
+                    c &= 1-2+2P(Z \leq t) \\
+                    c &= -1+2P(Z \leq t)
+                    
+\end{align}
+        
+    
+a. t = 2.776, sample size 5.
+    
+    ```{r}
+     -1+(2*pt(2.776, 4)) 
+    ```
+b. t = 2.718, sample size 12.
+    ```{r}
+     -1+(2*pt(2.718, 11)) 
+    ```
+c. t = 5.841, sample size 4.
+    ```{r}
+     -1+(2*pt(5.841, 3)) 
+    ```
+d. t = 1.325, sample size 21.
+    ```{r}
+     -1+(2*pt(1.325, 20)) 
+    ```
+e. t = 1.746, sample size 17.
+    ```{r}
+     -1+(2*pt(1.746, 16)) 
+    ```
+    
+4. True or false: The Student’st distribution may be used to construct a confidence interval for the mean of any population, so long as the sample size is small.
+
+False
+
+5. The article “Wind-Uplift Capacity of Residential Wood Roof-Sheathing Panels Retrofitted with Insulating Foam Adhesive” (P. Datin, D. Prevatt,
+and W. Pang, Journal of Architectural Engineering, 2011:144–154) presents a study of the failure pressures of roof panels. Following are the failure
+pressures, in kPa, for five panels constructed with 6d smooth shank nails. These data are consistent with means and standard deviations presented in
+the article.
+
+3.32 2.53 3.45 2.38 3.01
+
+Find a 95% confidence interval for the mean failure pressure for this type of roof panel.
+
+Let $\hat{X}$ be the mean of the data and $\hat{\sigma}$ the standar deviation then:
+Let $Z = \frac{ \hat{X} - \mu}{\frac{\hat{\sigma}}{\sqrt{n}}}$ then Z follows a t-student distribution with n-1 degrees of freedom
+
+\begin{align}
+    P(-t \leq Z \leq t) &= 0.95 = 1 - 0.05 \\
+    P(-t \leq \frac{\hat{X} - \mu}{\frac{\hat{\sigma}}{\sqrt{n}}} \leq t) &= 1 - 0.05 \\
+    P(-t \frac{\hat{\sigma}}{\sqrt{n}} \leq \hat{X} - \mu \leq t \frac{\hat{\sigma}}{\sqrt{n}}) &= 1 - 0.05 \\
+    P(-\hat{X} -t \frac{\hat{\sigma}}{\sqrt{n}} \leq - \mu \leq -\hat{X} + t \frac{\hat{\sigma}}{\sqrt{n}}) &= 1-0.5 \\
+    P(\hat{X} +t \frac{\hat{\sigma}}{\sqrt{n}} \geq  \mu \geq \hat{X} - t \frac{\hat{\sigma}}{\sqrt{n}}) &= 1-0.5 \\
+    P(\hat{X} - t \frac{\hat{\sigma}}{\sqrt{n}} \leq \mu \leq \hat{X} +t \frac{\hat{\sigma}}{\sqrt{n}} ) &= 1-0.5 \\
+\end{align}
+
+First we compute the mean and the standard deviation
+```{r}
+data = c(3.32, 2.53, 3.45, 2.38, 3.01)
+X = mean(data)
+sigma = sd(data)
+```
+Which is the value of t 
+\begin{align}
+    P(-t \leq Z \leq t) &= 0.95 = 1 - 0.05 \\
+      &= 1- 2P(Z \geq t) \\
+      &= 1- 2(1 -P(Z \leq t)) \\
+      &= -1 +2P(Z \leq t) \\
+      &= -1 +2F(t) \\
+      c &= -1 + 2F(t) \\
+      \frac{c+1}{2} &= F(t) \\
+      F^{-1}\left(\frac{c+1}{2}\right) = t
+\end{align}
+
+```{r}
+n = length(data)
+t = qt((0.95 +1)/2, n-1)
+t
+```
+
+```{r}
+c(X-t*sigma/(sqrt(n)), X+t*sigma/(sqrt(n)))
+```
+
+6. The following are summary statistics for a data set.
+Would it be appropriate to use the Student’s t distribution to construct a confidence interval from these data? Explain.
+
+* N = 10
+* Mean = 8.905
+* Median = 6.105
+* StDev = 9.690
+* Minimum = 0.512
+* Maximum = 39.920
+* Q1 = 1.967
+* Q3 = 8.103
+
+No. The mean and the median are very different
+
+7. The article “An Automatic Visual System for Marble Tile Classification” (L. Carrino, W. Polini, and S. Turchetta, Journal of Engineering Manufacture,
+2002:1095–1108) describes a measure for the shade of marble tile in which the amount of light reflected by the tile is measured on a scale of 0–255. A perfectly black tile would reflect no light and measure 0, and a perfectly white tile would measure 255. A sample of nine Mezza Perla tiles were measured,
+with the following results:
+
+204.999 206.149 202.102 207.048 203.496 206.343 203.496 206.676 205.831
+Is it appropriate to use the Student’s t statistic
+to construct a 95% confidence interval for the mean
+shade of Mezza Perla tile? If so, construct the confidence interval. If not, explain why not.
+```{r}
+data = c(204.999, 206.149, 202.102, 207.048, 203.496, 206.343, 203.496, 206.676, 205.831)
+```
+```{r}
+qqnorm(data)
+qqline(data)
+```
+```{r}
+boxplot(data)
+```
+
+The data seems to be relativily normal and without any outliers.  It is possible to use the Student statistic.
+
+```{r}
+n = length(data)
+t = qt((0.95 +1)/2, n-1)
+c(X-t*sigma/(sqrt(n)), X+t*sigma/(sqrt(n)))
+```
+
+
+8. A chemist made eight independent measurements of  the melting point of tungsten. She obtained a sample mean of 3410.14 degrees Celsius and a sample standard deviation of 1.018 degrees.
+a. Use the Student’s t distribution to find a 95% confidence interval for the melting point of ungsten.
+```{r}
+n = 8
+X = 3410.14
+sigma = 1.018
+t = qt((0.95 +1)/2, n-1)
+c(X-t*sigma/(sqrt(n)), X+t*sigma/(sqrt(n)))
+```
+b. Use the Student’s t distribution to find a 98% confidence interval for the melting point of tungsten.
+```{r}
+t = qt((0.98 +1)/2, n-1)
+c(X-t*sigma/(sqrt(n)), X+t*sigma/(sqrt(n)))
+```
+c. If the eight measurements had been 3409.76, 3409.80, 3412.66, 3409.79, 3409.76, 3409.77, 3409.80, 3409.78, would the confidence intervals above be valid? Explain.
+
+```{r}
+data = c(3409.76, 3409.80, 3412.66, 3409.79, 3409.76, 3409.77, 3409.80, 3409.78)
+n = length(data)
+X = mean(data)
+sigma = sd(data)
+t = qt((0.98 +1)/2, n-1)
+c(X, sigma)
+```
