@@ -10,17 +10,184 @@ knitr::opts_chunk$set(echo = TRUE)
 library(knitr)
 library(kableExtra)
 ```
-1. The article “Improved Bioequivalence Assessmentof Topical Dermatological Drug Products UsingDermatopharmacokinetics” (B. N’Dri-Stempfer, W.Navidi, R. Guy, and A. Bunge,PharmaceuticalResearch, 2009:316–328) described a study compar-ing the amounts of econozole nitrate absorbed intohuman skin for several formulations of antifungalointment. Both a brand name and generic drug wereapplied to the arms of 14 subjects, and the amountsabsorbed, inμg/cm2, were measured. Following arethe results. Can you conclude that the mean amountabsorbed differs between the brand name and thegeneric drug?
+1. The article “Improved Bioequivalence Assessmentof Topical Dermatological Drug Products UsingDermatopharmacokinetics” (B. N’Dri-Stempfer, W.Navidi, R. Guy, and A. Bunge,Pharmaceutical Research, 2009:316–328) described a study comparing the amounts of econozole nitrate absorbed intohuman skin for several formulations of antifungalointment. Both a brand name and generic drug wereapplied to the arms of 14 subjects, and the amountsabsorbed, in μg/cm2, were measured. Following arethe results. Can you conclude that the mean amountabsorbed differs between the brand name and thegeneric drug?
 
 ```{r ej1}
 data = c(2.23, 1.42, 0.81, 1.68, 1.95, -0.27, 1.96, 2.58, -0.62, 2.81, 2.25, 0.56, 1.14, 1.21, -0.07, 3.20, 3.01, 0.19, 2.33, 2.76, -0.43, 4.06, 3.65, 0.41, 2.92, 2.89, 0.03, 2.92, 2.85, 0.07, 2.83, 2.44, 0.39, 3.45, 3.11, 0.34, 2.72, 2.64, 0.08, 3.74, 2.82, 0.92)
 mat = matrix(data, ncol=3, byrow = TRUE)
 df = as.data.frame(mat)
 colnames(df) = c("Brand Name",  "Generic", "Difference")
-kable(df)
+kable_styling(kable(df))
 ```
 
 ```{r}
-data = df['Difference']
-data
+data = df[['Difference']]
+D = mean(data)
+s = sd(data)
+n = 14
+t = D / (s/sqrt(n))
+print(t)
+print(pt(-t, n-1, lower.tail = TRUE) + pt(t, n-1, lower.tail = FALSE))
+```
+NO!
+
+2.  The article “Estimation of Mean Arterial Pressure from the Oscillometric Cuff Pressure: Comparison of
+Different Techniques” (D. Zheng, J. Amoore, et al., Med Biol Eng Comput, 2011:33–39) describes a
+study comparing two methods of measuring mean arterial blood pressure. The auscultatory method is based on listening to sounds in a stethoscope, while the oscillatory method is based on oscillations in blood flow. Following are measurements on six subjects in mmHg, consistent with means and standard deviations presented in the article.
+Can you conclude that the mean reading is greater for the auscultatory method?
+
+```{r}
+data = c(92.9, 86.3, 6.6, 101.5, 97.3, 4.2,74.3, 79.8, -5.5,95.0, 98.1, -3.1,91.4, 82.1, 9.3,80.6, 84.5,-3.9)
+mat = matrix(data, ncol=3, byrow = TRUE)
+df = as.data.frame(mat)
+colnames(df) = c("Auscultatory",  "Oscillatory", "Difference")
+kable(df)
+```
+```{r}
+data = df[['Difference']]
+D = mean(data)
+s = sd(data)
+n = length(data)
+t = D / (s/sqrt(n))
+print(t)
+print(pt(t, n-1, lower.tail = FALSE))
+```
+NO
+
+3.  A dry etch process is used to etch silicon dioxide (SiO2 ) off of silicon wafers. An engineer wishes to study the uniformity of the etching across the surface of the wafer. A total of 10 wafers  are sampled after etching, and the etch rates (in A/min) are measured at two different sites, one near the center of the wafer, and one near the edge. The results are presented in the following table.
+Can you conclude that the etch rates differ between the center and the edge?
+
+```{r}
+data = c(1, 586, 582,2, 568, 569,3, 587, 587,4, 550, 543,5, 543, 540,6, 552, 548,7, 562, 563,8, 577, 572,9,558, 559,10, 571, 566)
+mat = matrix(data, ncol=3, byrow = TRUE)
+df = as.data.frame(mat)
+colnames(df) = c("Wafer",  "Center", "Edge")
+kable_styling(kable(df))
+```
+
+```{r}
+data = df[['Center']] - df[['Edge']]
+D = mean(data)
+s = sd(data)
+n = length(data)
+t = D / (s/sqrt(n))
+print(t)
+print(pt(-t, n-1, lower.tail = TRUE) + pt(t, n-1, lower.tail = FALSE))
+```
+YES
+
+5. Two formulations of a certain coating, designed to inhibit corrosion, are being tested. For each of eight pipes, half the pipe is coated with formulation A and the other half is coated with formulation B. Each pipe is exposed to a salt environment for 500 hours. Afterward, the corrosion loss (in μm) is measured
+for each formulation on each pipe.
+Can you conclude that the mean amount of corrosion differs between the two formulations?
+
+
+```{r}
+data = c(1, 197, 204,2, 161, 182,3, 144, 140,4, 162, 178,5, 185, 183,6, 154, 163,7, 136, 156,8, 130, 143)
+mat = matrix(data, ncol=3, byrow = TRUE)
+df = as.data.frame(mat)
+colnames(df) = c("Pipe",  "A", "B")
+kable_styling(kable(df))
+```
+```{r}
+data = df[['A']] - df[['B']]
+D = mean(data)
+s = sd(data)
+n = length(data)
+t = D / (s/sqrt(n))
+print(t)
+print(pt(t, n-1, lower.tail = TRUE) + pt(-t, n-1, lower.tail = FALSE))
+```
+YES
+7. The compressive strength, in kilopascals, was measured for concrete blocks from five different batches
+of concrete, both three and six days after pouring. The data are presented in the following table.
+Can you conclude that the mean strength after six days is greater than the mean strength after three
+days?
+Let $D_i = X_{3 days} - X_{6 days}$.
+If the mean mean strength after six days is greater than the mean strength after three
+days then The difference should be less than zero
+$$
+H_0: \hat{D} \geq 0 \text { versus } H_1: \hat{D}  < 0
+$$
+
+```{r}
+data = c(1341, 1316, 1352, 1355, 1327, 1376, 1373, 1366, 1384, 1358)
+mat = matrix(data, nrow=2, byrow = TRUE)
+df = as.data.frame(mat)
+rownames(df) = c("After 3 days",  "After 6 days")
+kable_styling(kable(df))
+```
+
+```{r}
+data = as.numeric(df["After 3 days", ] - df["After 6 days", ])
+D = mean(data)
+s = sd(data)
+n = length(data)
+t = D / (s/sqrt(n))
+print(t)
+print(pt(t, n-1, lower.tail = TRUE))
+```
+YES
+9. A crossover trial is a type of experiment used to compare two drugs. Subjects take one drug for a period of time, then switch to the other. The responses of the subjects are then compared using matched
+pair methods. In an experiment to compare two pain relievers, seven subjects took one pain reliever
+for two weeks, then switched to the other. They rated their pain level from 1 to 10, with larger numbers representing higher levels of pain. The results were 
+```{r}
+data = c(6, 3, 4, 5, 7, 1, 4, 5, 1, 5, 5, 5, 2, 2)
+mat = matrix(data, nrow=2, byrow = TRUE)
+df = as.data.frame(mat)
+rownames(df) = c("Drug A",  "Drug B")
+kable_styling(kable(df))
+```
+Can you conclude that the mean response differs between the two drugs?
+
+
+```{r}
+data = as.numeric(df["Drug A", ] - df["Drug B", ])
+D = mean(data)
+s = sd(data)
+n = length(data)
+t = D / (s/sqrt(n))
+print(pt(-t, n-1, lower.tail = TRUE) + pt(t, n-1, lower.tail = FALSE))
+```
+No
+
+11 The management of a taxi cab company is trying to decide if they should switch from bias tires to radial tires to improve fuel economy. Each of 10 taxis was equipped with one of the two tire types and driven on a test course. Without changing drivers, tires were then switched to the other tire type and the test course was repeated. The fuel economy (in mpg) for the 10
+
+```{r}
+data = c(1, 32.1, 27.1,2, 36.1, 31.5,3, 32.3, 30.4,4, 29.5, 26.9,5, 34.3, 29.9,6, 31.9, 28.7,7, 33.4,30.2,8, 34.6, 31.8,9, 35.2, 33.6,10, 32.7, 29.9)
+mat = matrix(data, ncol=3, byrow = TRUE)
+df = as.data.frame(mat)
+colnames(df) = c("Car",  "Radial", "Basis")
+kable_styling(kable(df))
+```
+
+a. Because switching tires on the taxi fleet is expensive, management does not want to switch unless a hypothesis test provides strong evidence that the mileage will be improved. State the appropriate null and alternate hypotheses, and find the P-value.
+$$H_0: \mu_{radial} - \mu_{basis} \leq 0 \text{ versus } H_1:\mu_{radial} - \mu_{basis} \ > 0$$ 
+
+
+```{r}
+data = as.numeric(df[["Radial"]] - df[["Basis" ]])
+
+D = mean(data)
+s = sd(data)
+n = length(data)
+t = D / (s/sqrt(n))
+print(t)
+print(pt(t, n-1, lower.tail = FALSE))
+```
+strong evidence
+
+b. A cost-benefit analysis shows that it will be profitable to switch to radial tires if the mean mileage
+improvement is greater than 2 mpg. State the appropriate null and alternate hypotheses, and
+find the P-value, for a hypothesis test that is designed to form the basis for the decision whether
+to switch.
+$$H_0: \mu_{radial} - \mu_{basis} \leq 2 \text{ versus } H_1:\mu_{radial} - \mu_{basis} \ > 2$$ 
+```{r}
+data = as.numeric(df[["Radial"]] - df[["Basis" ]])
+
+D = mean(data) - 2
+s = sd(data)
+n = length(data)
+t = D / (s/sqrt(n))
+print(t)
+print(pt(t, n-1, lower.tail = FALSE))
 ```
