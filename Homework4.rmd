@@ -1,0 +1,114 @@
+---
+title: "Homework4"
+author: "Luciano Lorenti"
+date: "2/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1. Consider  an  experiment  on  antibiotic  efficacy.   A  1  litre  culture  of  5105  cells  (this  figure  beingknown quite accurately) is set up and dosed with antibiotic.  After 2 hours and every subsequenthour up to 14 hours after dosing, 0.1ml of the culture is removed and the live bacteria in this samplecounted under a microscope.  The data are:
+
+```{r}
+data = c(35, 33, 33, 39, 24, 25, 18, 20, 23, 13, 14, 20, 18)
+```
+
+A simple  model  for  the  sample  counts, $x_i$,  is  that  they  are  realizations  of  independent  random variables $X_i$ such that $E(X_i) = 50e^{−\delta  t_i}$,where $\delta$ is an unknown ‘death rate’ parameter (per hour) and $t_i$ is the sample time in hours, $i= 1,...,13$. Given the sampling protocol, it is reasonable toassume that the actual counts are observations of independent Poisson random variables with the above given mean.
+1.  Explain why the Poisson model is a reasonable model.
+2.  Obtain the likelihood, $L(\delta)$,and the log-likelihood, $l(\delta)$,functions.
+
+$$L(\delta) = \prod\limits_{i=1}^{13} e^{-50 e^{-\delta t_i}} (50e^{-\delta t_i})^{X_i} $$
+
+$$l(\delta) = \sum\limits_{i=1}^{13} -50 e^{-\delta t_i} + X_i \log(50) -X_i \delta t_i $$
+3.  Plot the log-likelihood function.
+```{r}
+log_likelihood <- function (delta, data) {
+  t=2:14
+  sum(-50*exp(-delta*t) + data*log(50) - data*delta*t)
+  
+}
+data = c(35, 33, 33, 39, 24, 25, 18, 20, 23, 13, 14, 20, 18)
+x <- seq(-0.1,0.5,length=100)
+y = lapply(x, function (v) log_likelihood(v, data))
+plot(x, y)
+```
+4.  Write an R function implementing the Newton-Raphson algorithm for solving the score equation.
+5.  By applying the Newton-Raphson algorithm, obtain the maximum likelihood estimate,ˆδ, of $\delta$.
+To obtain the MLE we find the roots of the score functions
+* Score
+$$
+\begin{align*}
+score(\delta) = \dfrac{d l(\delta)}{d \delta} &= \dfrac{d \sum\limits_{i=1}^{13} -50 e^{-\delta t_i} + X_i \log(50) -X_i \delta t_i }{d \delta} \\
+ &=  \sum\limits_{i=1}^{13} t_i 50 e^{-\delta t_i} - X_i t_i  \\
+\end{align*}
+$$
+
+* Observed information
+$$
+\begin{align*}
+\dfrac{d score(\delta)}{d \delta} &= \dfrac{d \sum\limits_{i=1}^{13} t_i 50 e^{-\delta t_i} - X_i t_i }{d \delta} \\
+ &=  \sum\limits_{i=1}^{13} - t_i^2 50 e^{-\delta t_i} 
+\end{align*}
+$$
+
+```{r}
+observerd_info <- function(delta) {
+  t = 2:14
+  -50*sum((t)^2*exp(-delta*t))
+}
+score <- function(delta, data) {
+  t = 2:14
+  50*sum(t*exp(-delta*t)) - sum(data*t)
+}
+newton_raphson <- function(f, df, initial) {
+  current = initial
+  old = 9999
+  while (abs(current - old) > 0.00000000005) {
+    old = current
+    current = current - (f(current)/df(current))
+  }
+  current
+}
+
+curr = newton_raphson(function(x) score(x,data), observerd_info ,0.1)
+print(curr)
+print(log_likelihood(curr, data))
+```
+
+6.  To the plot produced in (c), add the quadratic (parabolic) approximation to the log-likelihoodobtained by expanding the log-likelihood around the maximum likelihood estimateˆδ.
+
+```{r}
+log_likelihood <- function (delta, data) {
+  t=2:14
+  sum(-50*exp(-delta*t) + data*log(50) - data*delta*t)
+  
+}
+data = c(35, 33, 33, 39, 24, 25, 18, 20, 23, 13, 14, 20, 18)
+x <- seq(-0.1,0.5,length=100)
+y = lapply(x, function (v) log_likelihood(v, data))
+plot(x, y)
+```
+
+
+7.  Give an approximate distribution for the maximum likelihood estimator
+```{r}
+print(1/observerd_info(curr))
+```
+The MLE of the parameter follows a normal distribution $N(\delta, j(\hat{\theta})^{-1})$
+
+$$
+\begin{align*}
+P(|\hat{\delta}|  < v) &= 0.95 \\
+P(z_{0.95} < {\hat{\delta} - \delta}{s}  < z_{0.95}) &= 0.95 \\
+P(\hat{\delta} - sz_{0.95} <  \delta  < \hat{\delta}+sz_{0.95}) &= 0.95
+\end{align*}
+$$
+
+```{r}
+s = sqrt(abs(1/observerd_info(curr)))
+u = curr 
+z = qnorm(1.95/2)
+print(paste(u-s*z,  " - ", u+s*z))
+```

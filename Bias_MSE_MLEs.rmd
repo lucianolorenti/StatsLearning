@@ -1,0 +1,278 @@
+  ---
+title: "BIAS_MSE_MLEs"
+author: "Luciano Lorenti"
+date: "2/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+1. Choose the best answer to fill in the blank. If an esti-mator is unbiased, then
+i. the estimator is equal to the true value.
+ii. the estimator is usually close to the true value.
+iii. the mean of the estimator is equal to the true value.
+iv. the mean of the estimator is usually close to thetrue value
+
+(iii)
+
+2. Choose the best answer to fill in the blank. The variance  of an estimator measures
+i. how close the estimator is to the true value.
+ii. how close repeated values of the estimator are toeach other.
+iii. how close the mean of the estimator is to the truevalue.
+iv. how close repeated values of the mean of the esti-mator are to each other.
+
+iii
+
+3. Let $X_1$ and $X_2$ be independent, each with unknown mean $\mu$ and known variance $σ^2=1$:
+
+a. Let $\hat{u} = \dfrac{X_1 + X_2}{2}$. Find the bias, variance and mean squared error of $\hat{u}_1$
+
+$$
+\begin{align*}
+E[\hat{u}] &= E\left[\dfrac{X_1 +X_2}{2} \right] \\
+           &= \dfrac{E[X_1] +E[X_2]}{2}  \\
+           &= \dfrac{\mu + \mu}{2} \\
+           &= \mu
+\end{align*}
+$$
+
+* Bias :
+$$E[\hat{u}] - \mu = 0$$
+
+* Variance:
+$$
+\begin{align*}
+Var[\hat{u}] &= \frac{1}{2}^2 (Var(X_1) + Var(X_2)) \\
+            &= \dfrac{1}{4} (1 + 1)\\ 
+            &= \dfrac{1}{2}
+\end{align*}
+$$
+
+* MSE :
+
+$$MSE[\hat{u}] = 0 + \frac{1}{2}$$
+
+b. Let $\hat{u} = \dfrac{X_1 + 2X_2}{3}$. Find the bias, variance and mean squared error of $\hat{u}_1$
+
+* Bias :
+
+$$
+\begin{align*}
+E[\hat{u}] - \mu &= \dfrac{E[X_1] + 2E[X_2]}{3} - \mu \\
+                 &= \dfrac{\mu + 2\mu}{3} - \mu \\
+                 &= \dfrac{3\mu}{3} - \mu \\
+                 &= 0
+\end{align*}
+$$
+
+* Variance:
+$$
+\begin{align*}
+Var[\hat{u}] &= \frac{1}{3}^2 (Var(X_1) + Var(2X_2)) \\
+            &= \dfrac{1}{9} (1 + 2^2 Var(X_2))\\ 
+            &= \dfrac{1}{9} (1 + 4) \\
+            &= \dfrac{5}{9}
+\end{align*}
+$$
+
+* MSE :
+
+$$MSE[\hat{u}] = 0 + \frac{5}{9}$$
+
+c. Let $\hat{u} = \dfrac{X_1 + X_2}{4}$. Find the bias, variance and mean squared error of $\hat{u}_1$
+
+$$
+\begin{align*}
+E[\hat{u}] - \mu &= \dfrac{E[X_1] + E[X_2]}{4} - \mu \\
+                 &= \dfrac{\mu + \mu}{4} - \mu \\
+                 &= \dfrac{2\mu}{4} - \mu \\
+                 &= \dfrac{\mu}{2} - \mu \\
+                 &= -\dfrac{\mu}{2}
+\end{align*}
+$$
+
+* Variance:
+$$
+\begin{align*}
+Var[\hat{u}] &= \frac{1}{4}^2 (Var(X_1) + Var(2X_2)) \\
+            &= \dfrac{1}{16} (1 + 1\\ 
+            &= \dfrac{2}{16} \\
+            &= \dfrac{1}{8}
+\end{align*}
+$$
+
+
+* MSE :
+
+$$MSE[\hat{u}] = \dfrac{\mu}{2}^2 + \frac{1}{8} =$$
+
+3. For what values of $\mu$ does $\hat{\mu_3}$ have smaller meansquared error tha $\hat{μ_1}$?
+
+$$
+\begin{align*}
+MSE[\hat{\mu_3}] &< MSE[\hat{mu_1}] \\
+\dfrac{\mu}{2}^2 + \frac{1}{8} &< \frac{1}{2} \\
+\dfrac{\mu^2}{4}  &< \frac{1}{2}  - \frac{1}{8} \\
+\mu^2  &< 4\left(\frac{1}{2}  - \frac{1}{8}\right) \\
+\mu^2  &< 2  - \frac{1}{2} \\
+\mu  &< \pm \sqrt{\frac{3}{2}} \\
+-\sqrt{\frac{3}{2}} &< \mu  <  \sqrt{\frac{3}{2}} \\
+\end{align*}
+$$
+
+4. Let $X_1,..., X_n$ be a simple random sample from a $N(\mu, \sigma^2)$ population. For any constant $k>0$, define $\hat{\sigma}_k^2 = \sum\limits_{i=1}^n \dfrac{(X_i - \hat{X})^2}{k}$. Consider $\hat{\sigma}_k^2$ as an estimator of $\sigma^2$.
+
+a.  Compute the bias of $\sigma^2_k$ in terms of $k$. 
+$$
+\begin{align*}
+\hat{\sigma}^2 &= \frac{(n-1)s^2}{k} \\
+E[\hat{\sigma}^2] - \sigma^2 &= E\left[ \frac{(n-1)s^2}{k} \right] - \sigma \\
+&= \dfrac{n-1}{k} E[s^2] - \sigma^2 \\
+&= \dfrac{n-1}{k} \sigma^2 - \sigma^2 \\
+&= \sigma^2 \left( \dfrac{n-1}{k}  - 1 \right)
+\end{align*}
+$$
+
+b.  Compute the variance of $\sigma^2_k$ in terms of $k$. 
+$$ 
+\begin{align*}
+Var(\sigma_2^k) &= Var\left(\frac{(n-1)s^2}{k}\right) \\
+                &= \left(\frac{n-1}{2}\right)^2 Var(s^2) \\
+                &= \left(\frac{n-1}{2}\right)^2 \frac{ 2\sigma^4}{n-1} \\
+                &= \left(\frac{n-1}{4}\right)  2\sigma^4 \\
+\end{align*}
+$$
+
+5. Let $X \sim Geom(p)$. Find the MLE of $p$
+
+$$f(x; p) = (1 − p)^{x − 1}p$$
+
+$$
+\begin{align*}
+    f(x; p) &= (1 − p)^{x − 1}p \\
+    \log ( f(x; p) ) &= \log ( (1 − p)^{x − 1}p ) \\
+     &= (x-1) \log(1-p) + \log(p) \\
+\dfrac{d\log ( f(x; p) )}{dp} &= \dfrac{d (x-1) \log(1-p) + \log(p)}{dp} \\
+                              &= -(x-1)\frac{1}{1-p} +\frac{1}{p} = 0 \\
+                    (x-1)\frac{1}{1-p} &=  \frac{1}{p} \\
+                    (x-1)p &= 1-p \\
+                    px - p &= 1 - p \\
+                    px &= 1 \\
+                    p &= \frac{1}{x}
+\end{align*}
+$$
+
+
+6. Let $X_1, ..., X_n$ be a random sample from a population with the $Poisson(\lambda)$ distribution. Find the MLE of $\lambda$.
+
+$$f(X_1, ... X_n; \lambda) = \prod_{i=1}^n \dfrac{e^{-\lambda}  \lambda^{X_i}}{{X_i}!}$$
+$$
+\begin{align*}
+f(X_1, ... X_n; \lambda) &= \prod_{i=1}^n \dfrac{e^{-\lambda}  \lambda^{X_i}}{{X_i}!} \\
+\log(f(X_1, ... X_n; \lambda)) &=  \sum\limits_{i=1}^n \log \left( \dfrac{e^{-\lambda}  \lambda^{X_i}}{{X_i}!} \right) \\
+&= \sum\limits_{i=1}^n -\lambda + X_i \log(\lambda) -  \log(X_i!) \\
+&= -n\lambda +  \sum\limits_{i=1}^n X_i \log(\lambda) -  \log(X_i!) \\
+\dfrac{d\log(f(X_1, ... X_n; \lambda))}{d\lambda} &=  \dfrac{d\left( -\lambda n + \sum\limits_{i=1}^n X_i \log(\lambda) -  \log(X_i!) \right)}{d \lambda} \\
+&=-n + \sum\limits_{i=1}^n \dfrac{X_i}{\lambda} \\
+&=-n + \dfrac{1}{\lambda} \sum\limits_{i=1}^n X_i \\
+&=-n + \dfrac{1}{\lambda} \sum\limits_{i=1}^n X_i \\
+\dfrac{d\log(f(X_1, ... X_n; \lambda))}{d\lambda} &= 0 \\
+-n + \dfrac{1}{\lambda} \sum\limits_{i=1}^n X_i  &= 0 \\
+ \dfrac{1}{\lambda} \sum\limits_{i=1}^n X_i  &= n \\
+  \dfrac{1}{n} \sum\limits_{i=1}^n X_i  &= \lambda
+\end{align*}
+$$  
+  
+7. Maximum likelihood estimates possess the property of functional invariance, which means that if $\hat{\theta}$ is the MLE of $\theta$, and $h(\theta )$ is any function of $\theta$, then $h(\theta)$ is the MLE of $h(\theta )$.
+
+a. Let $X \sim Bin(n,p)$ where $n$ is known and $p$ is unknown. Find the MLE of the odds ratio $\dfrac{p}{1-p}$
+The ML of the binomial is $\hat{p} = \frac{X}{n}$
+    
+The MLE of $f(p) = \dfrac{p}{1-p}$ is $f(\hat{p}) = \frac{\hat{p}}(1-\hat{p})$
+
+$$
+\begin{align*}
+f(\hat{p}) &= \frac{\hat{p}}{1-\hat{p}} \\
+&= \dfrac{\frac{X}{n}}{1-\frac{X}{n}} \\
+&= \dfrac{\frac{X}{n}}{\frac{n-X}{n}} \\
+&= \dfrac{Xn}{n(n-X)} \\
+&= \dfrac{X}{(n-X)} \\
+\end{align*}
+$$
+
+b. Use the result of Exercise 5 to find the MLE of the odds ratio $\dfrac{p}{1 − p}$ if $X \sim Geom( p)$.
+
+if the MLE $p$ is $\hat{p} = \frac{1}{x}$ then the MLE of  $f(p) = \dfrac{p}{1-p}$ is  $f \left(\hat{p} \right) = \dfrac{\hat{p}}{1 - \hat{p}}$ 
+$$
+\begin{align*}
+f \left(\hat{p} \right) &= \dfrac{\hat{p}}{1 - \hat{p}} \\
+                   &= \dfrac{\frac{1}{x}}{1 - \frac{1}{x}} \\
+                   &= \dfrac{\frac{1}{x}}{\frac{x-1}{x}} \\
+                   &= \dfrac{x}{(x-1)x} \\
+                   &= \dfrac{1}{(x-1)} \\
+\end{align*}
+$$
+
+c. If $X \sim Poisson(\lambda)$, then $P(X = 0) = e^{-\lambda}$. Use the result of Exercise 6 to find the MLE of P(X = 0) if $X_1 ,..., X_n$ is a random sample from a population with the Poisson(λ) distribution.
+
+we know that MLE of $\lambda$ is $\hat{X}$. Since $P(X=0) = f(\lambda) = e^{-\lambda}$ then the MLE of $f(\lambda) = f(\hat{X}) = e^{-\hat{x}}$
+
+8. Let $X_1, ..., X_n$ be a random sample from a $N(\mu, 1)$ population. Find the MLE of $\mu$.
+
+$$
+\begin{align*}
+L(\mu) &= \prod\limits_{i=1}^n \frac{1}{\sqrt{2\pi}}  e^\frac{-(x_i - \mu)^2}{2}  \\
+l(\mu) &= \sum\limits_{i=1}^n -\frac{1}{2} \log(2\pi) + \frac{-(x_i - \mu)^2}{2}  \\
+       &= \sum\limits_{i=1}^n -\frac{1}{2} \log(2\pi) - \frac{(x_i - \mu)^2}{2}  \\
+\dfrac{d l(\mu)}{d\mu} &= \dfrac{d\left( \sum\limits_{i=1}^n -\frac{1}{2} \log(2\pi) - \frac{(x_i - \mu)^2}{2} \right)}{d\mu} \\
+&=  \sum\limits_{i=1}^n -\dfrac{d\frac{(x_i - \mu)^2}{2} }{d\mu} \\
+&=  \sum\limits_{i=1}^n \dfrac{-2(x_i-\mu)(-1)2}{2^2} \\
+&=  \sum\limits_{i=1}^n (x_i-\mu) \\
+\dfrac{d l(\mu)}{d\mu} &= 0 \\
+\sum\limits_{i=1}^n (x_i-\mu) &= 0 \\
+\sum\limits_{i=1}^n x_i- n\mu &= 0 \\
+\sum\limits_{i=1}^n x_i &= n\mu  \\
+\dfrac{\sum\limits_{i=1}^n x_i}{n} &= \mu 
+\end{align*}
+$$
+
+
+9. Let $X_1 , ..., X_n$ be a random sample from a $N(0, \sigma^2)$ population. Find the MLE of $\sigma$ .
+$$
+\begin{align*}
+L(\mu) &= \prod\limits_{i=1}^n \frac{1}{\sigma\sqrt{2\pi}}  e^\frac{-(x_i)^2}{2\sigma^2}  \\
+l(\mu) &= \sum\limits_{i=1}^n -(\log(\sigma) + \frac{1}{2}\log(2\pi)) + \frac{-(x_i)^2}{2\sigma^2}  \\
+  &= \sum\limits_{i=1}^n -\log(\sigma) - \frac{1}{2}\log(2\pi) - \frac{(x_i)^2}{2\sigma^2}  \\
+\dfrac{d l(\mu)}{d\sigma} &= \dfrac{d\left( \sum\limits_{i=1}^n -\log(\sigma) - \frac{1}{2}\log(2\pi) - \frac{(x_i)^2}{2\sigma^2}  \right)}{d\sigma} \\
+&=  \sum\limits_{i=1}^n -\frac{1}{\sigma} - \frac{-(x_i)^2 4\sigma}{4\sigma^4} \\
+&=  \sum\limits_{i=1}^n -\frac{1}{\sigma} + \frac{(x_i)^2 }{\sigma^3} \\
+&=  \sum\limits_{i=1}^n \frac{-\sigma^2 + (x_i)^2 }{\sigma^3} \\
+\dfrac{d l(\mu)}{d\sigma} &= 0 \\
+\sum\limits_{i=1}^n \frac{-\sigma^2 + (x_i)^2 }{\sigma^3}  &= 0 \\
+ -n\sigma^2 + \sum\limits_{i=1}^n   (x_i)^2   &= 0 \\
+   \sum\limits_{i=1}^n   (x_i)^2   &= n\sigma^2 \\
+   \frac{ \sum\limits_{i=1}^n   (x_i)^2 }{n} &= \sigma^2 \\
+    \sqrt{ \frac{ \sum\limits_{i=1}^n   (x_i)^2 }{n}} &= \sigma
+\end{align*}
+$$
+10. Let $X_1, ... , X_n$ be a random sample from a $N(\mu, \sigma^2)$ population. Find the MLEs of $\mu$ and of $\sigma$ . (Hint: The likelihood function is a function of two parameters, $\mu$ and $\sigma$ . Compute partial derivatives with respect to $\mu$ and $\sigma$ and set them equal to 0 to find the values $\hat{\mu}$ and $\hat{\sigma}$  that maximize the likelihood function.)
+$$
+\begin{align*}
+L(\mu, \sigma) &= \prod\limits_{i=1}^n \frac{1}{\sigma\sqrt{2\pi}}  e^\frac{-(x_i - \mu)^2}{2\sigma^2}   \\
+l(\mu, \sigma) &= \sum\limits_{i=1}^n -\log(\sigma) - \frac{1}{2} \log(2\pi) -  \frac{(x_i - \mu)^2}{2\sigma^2}  \\
+\dfrac{d l(\mu, \sigma)}{ d \mu} &= \sum\limits_{i=1}^n -  \frac{-2(x_i - \mu)}{2\sigma^2}  \\
+ &= \sum\limits_{i=1}^n   \frac{(x_i - \mu)}{\sigma^2}  \\
+   \sum\limits_{i=1}^n   \frac{(x_i - \mu)}{\sigma^2}  &= 0  \\
+   \sum\limits_{i=1}^n   x_i - n\mu  &= 0 \\
+  \frac{ \sum\limits_{i=1}^n   x_i}{n}  &=  \mu \\
+ \dfrac{d l(\mu, \sigma)}{ d \sigma} &= \sum\limits_{i=1}^n -\frac{1}{\sigma} - \frac{-(x_i -u)^2 }{\sigma^ 3}\\
+  &= \sum\limits_{i=1}^n -\frac{1}{\sigma} - \frac{-(x_i -u)^2 }{\sigma^ 3}\\
+    &= \sum\limits_{i=1}^n \frac{-\sigma^2 +(x_i -u)^2 }{\sigma^ 3}  \\
+     \sum\limits_{i=1}^n \frac{- \sigma^2 +(x_i -u)^2 }{\sigma^ 3} &= 0 \\
+     \sum\limits_{i=1}^n -\sigma^2 +(x_i -u)^2  &= 0 \\
+          -n\sigma^2 + \sum\limits_{i=1}^n (x_i -u)^2  &= 0 \\
+               \sum\limits_{i=1}^n (x_i -u)^2  &= n\sigma^2 \\
+               \sqrt{\frac{\sum\limits_{i=1}^n (x_i -u)^2}{n}}  &= \sigma
+\end{align*}
+$$

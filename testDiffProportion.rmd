@@ -1,0 +1,85 @@
+---
+title: "TestDiffProportion"
+author: "Luciano Lorenti"
+date: "2/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1. Two extrusion machines that manufacture steel rods are being compared. In a sample of 1000 rods taken from machine 1, 960 met specifications regarding length and diameter. In a sample of 600 rods taken from machine 2, 582 met the specifications. Machine 2 is more expensive to run, so it is decided that machine 1 will be used unless it can be convincingly shown that machine 2 produces a larger proportion of rodsmeeting specifications.
+
+a. State the appropriate null and alternate hypotheses for making the decision as to which machine to use.
+$$
+H_0:  P_{m1} - P_{m2} \geq 0 \text{ versus } H_1: P_{m1} - P_{m2} < 0 
+$$
+
+b. Compute the P-value.
+```{r}
+n1 = 1000
+suc1 = 960
+n2 = 600
+suc2 = 582
+
+p1 = suc1/n1
+p2 = suc2/n2
+
+p = (suc1 + suc2)/(n1 + n2)
+z = (p1-p2)/(sqrt(p*(1-p)*((1/n1) + (1/n2))))
+print(z)
+print(pnorm(z, lower.tail=TRUE))
+
+```
+c. Which machine should be used?
+I cannot reject the null hyphotesis so the machine 1 should be used.
+
+
+3. The article “A Music Key Detection Method Based on Pitch Class Distribution Theory” (J. Sun, H. Li, and L. Ma, International Journal of Knowledge-based
+and Intelligent Engineering Systems, 2011:165–175) describes a method of analyzing digital music files to determine the key in which the music is written. In
+a sample of 307 pop music selections, the key was identified correctly in 245 of them. In a sample of 347 new-age selections, the key was identified correctly
+in 304 of them. Can you conclude that the method is more accurate for new-age songs than for pop songs?
+$$
+H_0: P_{new age} - p_{pop} \leq 0 \text{ versus } p_{new age} - p_{pop} > 0
+$$
+
+```{r}
+n1 = 307
+suc1 = 245
+n2 = 347
+suc2 = 304
+
+p1 = suc1/n1
+p2 = suc2/n2
+
+p = (suc1 + suc2)/(n1 + n2)
+z = (p2-p1)/(sqrt(p*(1-p)*((1/n1) + (1/n2))))
+print(z)
+print(pnorm(z, lower.tail=FALSE))
+```
+Yes I can concludej that. The p-value is small
+
+5. The article “HIV-positive Smokers Considering Quitting: Differences by Race/Ethnicity” (E. Lloyd-Richardson, C. Stanton, et al., Am J Health Behav,
+2008:3–15) reported that in a group of 230 European-American HIV-positive smokers, 102 of them had used a nicotine patch to try to quit smoking, and in a
+group of 72 Hispanic-American HIV-positive smokers, 20 had used a nicotine patch. Can you conclude that the proportion of patch users is greater among
+European-Americans?
+
+$$
+H_0: p_{european} - p_{hispanic} \leq 0 \text{ versus } p_{european} - p_{hispanic} > 0
+$$
+```{r}
+n1 = 230
+suc1 = 102
+n2 = 72
+suc2 = 20
+
+p1 = suc1/n1
+p2 = suc2/n2
+
+p = (suc1 + suc2)/(n1 + n2)
+z = (p1-p2)/(sqrt(p*(1-p)*((1/n1) + (1/n2))))
+print(z)
+print(pnorm(z, lower.tail=FALSE))
+```
+Yes. The p-value is low, I can reject the null hyphotesis.

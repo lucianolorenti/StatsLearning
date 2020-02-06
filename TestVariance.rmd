@@ -1,0 +1,198 @@
+---
+title: "TestVariance"
+author: "Luciano Lorenti"
+date: "1/28/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1. A random sample of size 11 from a normal distribution has variance $s^2 = 96$. 
+
+Test $H_0 : \sigma^2 ≤ 50$ versus $H_1 : \sigma^2 > 50$.
+
+We know  that $$(n-1) \dfrac{s^2}{\sigma^2} \sim \chi^2_{n-1}$$ If we asume $H_0$ true $\sigma^2 = 50$
+
+```{r}
+n = 11
+s1 = 96
+s2 = 50
+chi = ((n-1)*s1)/s2
+print(pchisq(chi, n-1, lower.tail=FALSE))
+
+```
+
+
+2. A random sample of size 29 from a normal distribution has variance $s^2 = 24$. 
+Test $H_0 : \sigma^2 \geq 30$ versus $H_1 : \sigma^2 < 30$.
+
+```{r}
+n = 29
+s1 = 24
+s2 = 30
+chi = ((n-1)*s1)/s2
+print(pchisq(chi, n-1, lower.tail=TRUE))
+```
+
+
+3.Scores on an IQ test are normally distributed. A sample of 25 IQ scores had variance $s^2 = 64$. The developer of the test claims that the population variance is $\sigma^2 = 225$. Do these data provide sufficient evidence to contradict this claim?
+
+$$H_0 : \sigma^2 = 255 \text{ versus } H_1 : \sigma^2 \neq 255$$
+
+```{r}
+n = 25
+s1 = 64
+s2 = 225
+chi = ((n-1)*s1)/s2
+p = pchisq(chi, n-1, lower.tail=TRUE) 
+print(2*p)
+```
+
+4. A machine that fills beverage cans is supposed to put 12 ounces of beverage in each can. The variance of the amount in each can is 0.01. The machine is
+moved to a new location. To determine whether the variance has changed, 10 cans are filled. Following are the amounts in the 10 cans. Assume them to be a
+random sample from a normal population.
+
+12.18  11.77   12.09  12.03  11.87 11.96  12.03  12.36  12.28  11.85
+
+Perform a hypothesis test to determine whether the variance differs from 0.01. What do you conclude?
+$$ H_0: \sigma^2 = 0.01 \text{ versus } H_1: \sigma^2 \neq 0.01 $$
+
+```{r}
+data = c(12.18, 11.77, 12.09, 12.03, 11.87, 11.96, 12.03, 12.36, 12.28, 11.85)
+s1 = sd(data)^2
+s2 = 0.01
+n = length(data)
+chi = (n-1)*(s1/s2)
+plower = pchisq(chi, n-1, lower.tail=TRUE)
+pupper = pchisq(chi, n-1, lower.tail=FALSE)
+p = min(plower, pupper)
+print(p*2)
+```
+
+5. A sample of 25 one-year-old girls had a mean weight of 24.1 pounds with a standard deviation of 4.3 pounds. Assume that the population of weights is
+normally distributed. A pediatrician claims that the standard deviation of the weights of one-year-old girls is less than 5 pounds. Do the data provide convincing evidence that the pediatrician’s claim is true? (Based on data from the National Health Statistics Reports.)
+
+```{r}
+n = 25
+s1 = 4.3^2
+s2 = 5^2
+chi = (n-1)*(s1/s2)
+p = pchisq(chi, n-1, lower.tail=TRUE)
+print(p)
+```
+
+6. The 2008 General Social Survey asked a large number of people how much time they spent watching TV each day. The mean number of hours was 2.98 with
+a standard deviation of 2.66. Assume that in a sample of 40 teenagers, the sample standard deviation of daily TV time is 1.9 hours, and that the population of TV watching times is normally distributed.
+Can you conclude that the population standard deviation of TV watching times for teenagers is less than 2.66?
+
+```{r}
+n = 40
+s1 = 1.9^2
+s2 = 2.66^2
+chi = (n-1)*(s1/s2)
+p = pchisq(chi, n-1, lower.tail=TRUE)
+print(p)
+```
+
+
+
+7. Scores on the math SAT are normally distributed. A sample of 20 SAT scores had standard deviations = 87. Someone says that the scoring system for the SAT is designed so that the population standard deviation will be σ = 100. Do these data provide sufficient evidence to contradict this claim?
+
+```{r}
+n = 20
+s1 = 87^2
+s2 = 100^2
+chi = (n-1)*(s1/s2)
+plower = pchisq(chi, n-1, lower.tail=TRUE)
+pupper = pchisq(chi, n-1, lower.tail=FALSE)
+p = min(plower, pupper)
+print(2*p)
+```
+
+8. One of the ways in which doctors try to determine how long a single dose of pain reliever will provide relief is to measure the drug’s half-life, which is the length of time it takes for one-half of the dose to be eliminated from the body. A report of the Naional Institutes of Health states that the standard
+deviation of the half-life of the pain reliever oxycodone is σ = 1.43 hours. Assume that a sample of 25 patients is given the drug, and the sample standard  deviation of the half-lives was s = 1.5 hours. As sume the population is normally distributed. Can you conclude that the true standard deviation is greater than the value reported by the National Institutes of Health?
+
+```{r}
+n = 25
+s1 = 1.5^2
+s2 = 1.43^2
+chi = (n-1)*(s1/s2)
+p = pchisq(chi, n-1, lower.tail=FALSE)
+print(p)
+```
+
+9. Find the upper 5% point of F7,20.
+```{r}
+print(qf(0.95, 7, 20), lower.tail=FALSE)
+```
+10.Find the upper 1% point ofF2,5.
+```{r}
+print(qf(0.99, 2, 5), lower.tail=FALSE)
+```
+
+11. An F test with five degrees of freedom in the numerator and seven degrees of freedom in the denominator produced a test statistic whose value was 7.46.
+a. What is the P-value if the test is one-tailed?
+```{r}
+print(pf(7.46, 4, 6, lower.tail=FALSE))
+```
+b. What is the P-value if the test is two-tailed
+```{r}
+print(2*pf(7.46, 4, 6, lower.tail=FALSE))
+```
+
+12. A broth used to manufacture a pharmaceutical product has its sugar content, in mg/mL, measured several times on each of three successive days.
+
+Day 1: 5.0 4.8 5.1 5.1 4.8 5.1 4.8 4.8 5.0 5.2 4.9 4.9 5.0
+Day 2: 5.8 4.7 4.7 4.9 5.1 4.9 5.4 5.3 5.3 4.8 5.7 5.1 5.7
+Day 3: 6.3 4.7 5.1 5.9 5.1 5.9 4.7 6.0 5.3 4.9 5.7 5.3 5.6
+
+a. Can you conclude that the variability of the process is greater on the second day than on the first day?
+```{r}
+day_1 = c(5.0, 4.8, 5.1, 5.1, 4.8, 5.1, 4.8, 4.8, 5.0, 5.2, 4.9, 4.9, 5.0)
+day_2 = c(5.8, 4.7, 4.7, 4.9, 5.1, 4.9, 5.4, 5.3, 5.3, 4.8, 5.7, 5.1, 5.7)
+
+n1 = length(day_1)
+s1 = var(day_1)
+
+n2 = length(day_2)
+s2 = var(day_2)
+
+print(2*pt(s1/s2, n1-1, n2-1,lower.tail=FALSE))
+
+```
+b. Can you conclude that the variability of the process is greater on the third day than on the second day?
+
+```{r}
+day_1 = c(5.0, 4.8, 5.1, 5.1, 4.8, 5.1, 4.8, 4.8, 5.0, 5.2, 4.9, 4.9, 5.0)
+day_2 = c(5.8, 4.7, 4.7, 4.9, 5.1, 4.9, 5.4, 5.3, 5.3, 4.8, 5.7, 5.1, 5.7)
+day_3 = c(6.3, 4.7, 5.1, 5.9, 5.1, 5.9, 4.7, 6.0, 5.3, 4.9, 5.7, 5.3, 5.6)
+```
+
+```{r}
+n1 = length(day_1)
+s1 = var(day_1)
+
+n2 = length(day_2)
+s2 = var(day_2)
+
+n3 = length(day_3)
+s3 = var(day_3)
+```
+
+13.Refer to Exercise 11 in Section 5.6. Can you con-clude that the variance of the sodium content differsbetween the two brands?
+
+Brand A:  34.36, 31.26,  37.36, 28.52, 33.14, 32.74, 34.34, 34.33, 30.95
+Brand B:  41.08, 38.22, 39.59, 38.82, 36.24, 37.73,  35.03, 39.22, 34.13,34.33, 34.98, 29.64, 40.60
+
+```{r}
+brand_a = c(34.36, 31.26,  37.36, 28.52, 33.14, 32.74, 34.34, 34.33, 30.95)
+brand_b = c(41.08, 38.22, 39.59, 38.82, 36.24, 37.73,  35.03, 39.22, 34.13,34.33, 34.98, 29.64, 40.60)
+va = var(brand_a)
+vb = var(brand_b)
+na = length(brand_a)
+nb = length(brand_b)
+print(vb/va)
+print(pf(vb/va, na-1, nb-1,  lower.tail=FALSE))
+```

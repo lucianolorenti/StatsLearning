@@ -1,0 +1,190 @@
+---
+title: "Homework3"
+author: "Luciano Lorenti"
+date: "2/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Homework 3
+
+## QQplots
+1.  Generate  100  observations  from  a  Studentst distribution  with  2  degrees  of  freedom  and generate the normal probability plot for this sample.  Generate another sample of same size,but now from atdistribution with 30 degrees of freedom and generate the QQ plot.  Do yousee any difference?  Repeat the exercise various times.
+```{r}
+data = rt(100, 2)
+qqnorm(data)
+qqline(data)
+```
+
+```{r}
+data = rt(100, 30)
+qqnorm(data)
+qqline(data)
+```
+More degrees of freedom more close to noamlity
+2.  Generate 100 observations from an exponential distribution with rate  4.
+
+
+(a)  Generate the normal probability plot for this sample.  Comment on the departures fromlinearity.
+```{r}
+data = rexp(100, 4)
+qqnorm(data)
+qqline(data)
+```
+
+
+(b)  Write theRcode for producing the plot of the previous point, without making use of theqqnorm()func
+```{r}
+my_qqnorm <- function(data) {
+    x = c()
+    y = c()
+    n = length(data)
+    for (i in 1:length(data)) {
+        x = c(x, quantile(data, i/n))
+        y = c(y, qnorm(i/n))
+    }
+    plot(y,x)
+        
+}
+my_qqnorm1 <- function(data) {
+    x = c()
+    y = c()
+    n = length(data)
+    data = (data-mean(data))/(sd(data))
+    data = sort(data)
+    for (i in 1:length(data)) {
+        y = c(y, qnorm(i/n))
+    }
+    plot(y,data)
+        
+}
+```
+
+2. Inference on the mean of a normal population1.  A bottling process for a given liquid produces bottles whose weight follows a normal distri-bution with standard deviation equal to 55 gr.  A simple random sample of 50 bottles hasbeen selected;  its mean weight has been 980 gr.  Compute a confidence interval at 99% forthe mean weightμof all bottles from the process.
+
+$$ Z = \dfrac{\hat{X} - \mu}{\sigma/\sqrt{n}} \sim N(0,1)
+$$
+\begin{align*}
+
+
+P(|Z| \leq z ) &= 0.99 \\
+P(-z \leq Z \leq z) &= 0.99 \\
+P(Z \leq z) - P(Z \leq -z) &= 0.99 \\
+P(Z \leq z) - (1- P(Z \leq z)) &= 0.99 \\
+P(Z \leq z) - 1 + P(Z \leq z) &= 0.99 \\
+2P(Z \leq z)  &= 1.99 \\
+P(Z \leq z)  &= \frac{1.99}{2}  \\
+\Phi(z) &= \frac{1.99}{2}  \\
+\Phi^{-1}(\frac{1.99}{2}) &= z_{0.99} \\
+P(-z_{0.99} \leq Z \leq z_{0.99}) &= 0.99 \\
+P(-z_{0.99} \leq \dfrac{\hat{X} - \mu}{\sigma / \sqrt{n} }\leq z_{0.99}) &= 0.99 \\
+P\left(\hat{X} -z_{0.99}\frac{\sigma}{\sqrt{n}} \leq  \mu \leq \hat{X} + z_{0.99}\frac{\sigma}{\sqrt{n}} \right) &= 0.99 \\
+\end{align*}
+$$
+
+```{r}
+s = 55
+n = 50
+u = 980
+z = qnorm(1.99/2)
+print(paste(u - z*(s/sqrt(n)) , " - " , u + z*(s/sqrt(n))))
+```
+
+2.  For the data in previous exercise, analyze the changes in the confidence interval if
+(a)  the sample size increases to 100 (for the same value of the sample mean)
+```{r}
+s = 55
+n = 100
+u = 980
+z = qnorm(1.99/2)
+print(paste(u - z*(s/sqrt(n)) , " - " , u + z*(s/sqrt(n))))
+```
+(b)  the confidence level is 95%
+```{r}
+s = 55
+n = 50
+u = 980
+z = qnorm(1.95/2)
+print(paste(u - z*(s/sqrt(n)) , " - " , u + z*(s/sqrt(n))))
+```
+
+3. You have measured the working life of a sample of 20 high-efficiency light bulbs.  For thissample, the mean life was 4520 h.  with a sample standard deviation equal to 750 h.  If theworking life of these bulbs is assumed to follow a normal distribution, compute a confidenceinterval at the 95% level for the average life of all the bulbs.
+
+```{r}
+n = 20
+u = 4520
+s = 750
+z = qt(1.95/2, 19)
+paste(u - z*(s/sqrt(n)), " - " , u + z*(s/sqrt(n)))
+```
+
+3    R session:  effects of Agent Orange on troops in VietnamAgent Orange is an herbicide mixture used during the Vietnam War to destroy forest cover/vegetation.Agent Orange, so-called from the orange color of its storage drums, contains the highly toxic impu-rity dioxin.  Agent Orange has been linked to cancers and other diseases in several epidemiologicalstudies.  The Operation Ranch Hand mission involved spraying 20 million gallons of Agent Orangeover 3.6 million acres of Vietnamese land.  About 3 million Americans served in the armed forcesin Vietnam during the Vietnam War.Dioxin measurements taken from blood serum can be used as a biological marker for previousAgent Orange exposure.  Consider the following data relative to Dioxin concentrations in parts pertrillion (ppt) collected in 1987 from,•sample of 646 Vietnam vets who served during 1967-1968;•sample of 97 vets who served in the US and Germany between 1965-1971
+
+```{r}
+library(Sleuth3)
+data(case0302)
+vets <- case0302
+head(vets)
+```
+
+1.  Read the data and summarize the variables.
+```{r}
+summary(vets)
+```
+
+```{r}
+boxplot(vets[["Dioxin"]]~vets[["Veteran"]], xlab='Veteran', ylab='Dixoin')
+```
+```{r}
+par(mfrow=c(1,2))
+hist(vets[vets["Veteran"] == "Vietnam",  "Dioxin"], freq=FALSE, xlab='Vietnam Veteran', ylab='Dixoin')
+hist(vets[vets["Veteran"] == "Other",  "Dioxin"], freq=FALSE, xlab='Other Veteran', ylab='Dixoin')
+```
+
+2.  Consider dioxin values measured on Vietnam veterans.  Is it reasonable to assume that thesevalues are realizations of Normal random variables?  Motivate your answer.
+
+```{r}
+data = vets[vets['Veteran'] == 'Vietnam', 'Dioxin']
+qqnorm(data)
+qqline(data)
+```
+
+```{r}
+boxplot(data)
+```
+
+Data does not appear to come from a normal distribution. 
+
+3.  You would like to build a confidence interval of some level for the mean of dioxin.  Discusshow you would approach the problem in this case.
+# CLT
+```{r}
+data = vets[vets['Veteran'] == 'Vietnam', 'Dioxin']
+u = mean(data)
+n = length(data)
+s = sd(data)
+z = qnorm(1.95/2)
+print(paste(u -  z*(s/sqrt(n)), " - ", u + z*(s/sqrt(n))))
+```
+
+# Log tansform
+```{r}
+data = vets[vets['Veteran'] == 'Vietnam', 'Dioxin']
+data = log(data + 1)
+```
+```{r}
+qqnorm(data)
+```
+
+
+4.  Can we conclude that for either of the two groups the mean of Dioxin concentration is greaterthan 4ppt?
+```{r}
+data = vets[vets['Veteran'] == 'Vietnam', 'Dioxin']
+u = mean(data)
+s = sd(data)
+n = length(data)
+t = (u - 4 )/(s/sqrt(n))
+print(pt(t, df=n-1, lower.tail=FALSE))
+```
